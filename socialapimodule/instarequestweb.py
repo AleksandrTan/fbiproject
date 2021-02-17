@@ -10,6 +10,9 @@ class InstagramRequestsWeb(BaseSocialRequests):
         self.host_proxy = host_proxy
         self.port_proxy = port_proxy
 
+    def request(self):
+        pass
+
     def login(self, login, password, url, params):
         pass
 
