@@ -1,7 +1,7 @@
 """
 A class for making requests to the social network Instagram
 """
-from interfaces.apisocial import BaseSocial
+from interfaces.apisocialinter import BaseSocial
 
 
 class InstagramRequests(BaseSocial):
