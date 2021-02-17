@@ -21,7 +21,7 @@ class InstaBot:
         self.login_task = login_task
         self.host_proxy = host_proxy
         self.port_proxy = port_proxy
-        self.instagram_api = social_api
+        self.social_api = social_api
         self.source_api = source_api
 
     def start(self):
