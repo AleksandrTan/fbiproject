@@ -6,6 +6,7 @@ a file on the standard output stream.
 """
 import time
 
+from logsource.logconfig import logger
 from apimodule.systemapiwork import SystemApiRequests
 from taskmodule.logintask import LoginTask
 from taskmodule.liketask import LikeTask
@@ -39,6 +40,7 @@ class InstaBot:
                                   "like": LikeTask(social_api, self.account_data)})
 
     def start(self):
+        logger.warning("Hello from logging!!!")
         while self.execution_status:
             new_task = self.get_new_task()
             print(new_task)

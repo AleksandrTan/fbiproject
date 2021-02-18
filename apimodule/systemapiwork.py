@@ -1,6 +1,7 @@
 """
 Module for requests to the system api
 """
+import logging
 import requests
 import json
 
