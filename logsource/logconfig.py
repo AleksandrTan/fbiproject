@@ -20,7 +20,7 @@ LOGGING_CONFIG = {
         'file': {
             'level': 'WARNING',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR + '/loging.log',
+            'filename': BASE_DIR + '/loging_fbi.log',
             'formatter': 'default_formatter',
         },
     },

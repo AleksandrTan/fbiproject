@@ -1,3 +1,4 @@
 # Project exclude paths
 /venv/
 loging.log
+loging_fbi.log
