@@ -5,8 +5,8 @@ receives tasks that it performs, accompanying its work with logging at the datab
 a file on the standard output stream.
 """
 import time
-
 from logsource.logconfig import logger
+
 from apimodule.systemapiwork import SystemApiRequests
 from taskmodule.logintask import LoginTask
 from taskmodule.liketask import LikeTask
@@ -61,13 +61,10 @@ class InstaBot:
 
         return new_task
 
-    def send_data_api(self):
-        pass
+    def send_data_api(self, data):
+        logger.warning(f"Bot {data} start working!!!")
 
     def set_log_record_api(self):
-        pass
-
-    def set_log_record_source(self):
         pass
 
 

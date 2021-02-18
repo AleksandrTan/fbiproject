@@ -1,7 +1,7 @@
 """
 Module for requests to the system api
 """
-import logging
+from logsource.logconfig import logger
 import requests
 import json
 
@@ -25,6 +25,7 @@ class SystemApiRequests:
         try:
             response = requests.get(url)
         except requests.exceptions.ConnectionError as error:
+            logger.warning(f"{error}")
             return {"status": False, "error": True, "error_type": error}
 
         if response.status_code == 200:

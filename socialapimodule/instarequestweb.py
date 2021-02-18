@@ -4,6 +4,7 @@ A class for making requests to the social network Instagram used web API
 import requests
 import json
 
+from logsource.logconfig import logger
 from interfaces.apisocialinter import BaseSocialRequests
 import requestsmap
 
@@ -33,13 +34,14 @@ class InstagramRequestsWeb(BaseSocialRequests):
                        }
             response = requests.post(main_url + uri, data=params, headers=headers)
         except requests.exceptions.ConnectionError as error:
+            logger.warning(f"{error}")
             return {"status": False, "error": True, "error_type": error}
 
         if response.status_code == 200:
             data = json.loads(response.text)
             if data["status"]:
                 return {"status": data["status"]}
-
+        logger.warning(f"Error response code - {response.status_code}")
         return {"status": False, "error": True, "error_type": response.status_code}
 
     def login(self, params: dict) -> dict:
