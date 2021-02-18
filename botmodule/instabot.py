@@ -40,7 +40,7 @@ class InstaBot:
                                   "like": LikeTask(social_api, self.account_data)})
 
     def start(self):
-        logger.warning("Hello from logging!!!")
+        logger.warning(f"Bot {self.individual_id} start working!!!")
         while self.execution_status:
             new_task = self.get_new_task()
             print(new_task)

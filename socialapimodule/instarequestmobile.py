@@ -15,7 +15,7 @@ class InstagramRequestsMobile(BaseSocialRequests):
     def make_request(self, main_url, uri, params):
         pass
 
-    def login(self, login, password):
+    def login(self, params: dict):
         pass
 
     def flipping_tape(self, url, params):

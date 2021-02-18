@@ -1,4 +1,6 @@
+import os
 import logging.config
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LOGGING_CONFIG = {
     'version': 1,
@@ -18,7 +20,8 @@ LOGGING_CONFIG = {
         'file': {
             'level': 'WARNING',
             'class': 'logging.FileHandler',
-            'filename': '/home/user/Projects/fbiproject/loging.log',
+            'filename': BASE_DIR + '/loging.log',
+            'formatter': 'default_formatter',
         },
     },
 
