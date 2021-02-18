@@ -29,7 +29,7 @@ class SystemApiRequests:
         if response.status_code == 200:
             data = json.loads(response.text)
             if data["status"]:
-                return {"status": data["status"], "task": data['task_name']}
+                return {"status": data["status"], "task_name": data['task_name']}
 
         return {"status": False}
 

@@ -7,6 +7,7 @@ a file on the standard output stream.
 import time
 
 from apimodule.systemapiwork import SystemApiRequests
+from taskmodule.logintask import LoginTask
 
 
 class InstaBot:
@@ -29,17 +30,20 @@ class InstaBot:
         self.port_proxy = port_proxy
         self.social_api = social_api
         self.source_api = system_api
+        self.task_objects = dict({"login": LoginTask(self.social_api)})
 
     def start(self):
         while self.execution_status:
             new_task = self.get_new_task()
             print(new_task)
             if new_task["status"]:
-                self.perform_task()
+                # run new task
+                self.perform_task(self.task_objects[new_task["task_name"]])
             else:
                 time.sleep(10)
 
-    def perform_task(self):
+    def perform_task(self, task_object):
+        task_object.run()
         time.sleep(10)
         return True
 
