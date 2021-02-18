@@ -1,10 +1,13 @@
+"""
+Social requests classes interface
+"""
 from abc import ABCMeta, abstractmethod
 
 
 class BaseSocialRequests(metaclass=ABCMeta):
 
     @abstractmethod
-    def request(self):
+    def make_request(self):
         pass
 
     @abstractmethod
