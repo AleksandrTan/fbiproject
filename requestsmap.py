@@ -3,25 +3,31 @@ Settings file for queries to social networks API
 """
 
 INSTAGRAM_MOBILE_DATA = {
+    "main_url": "",
     "login": {
-        "url": "",
-        "data": ""
+        "uri": "",
+        "data": "",
+        "params": ""
     },
 
     "like": {
-        "url": "",
-        "data": ""
+        "uri": "",
+        "data": "",
+        "params": ""
     }
 }
 
 INSTAGRAM_WEB_DATA = {
+    "main_url": "http://127.0.0.1:8000/",
     "login": {
-        "url": "",
-        "data": ""
+        "uri": "api/successlogin/",
+        "data": "",
+        "params": ""
     },
 
     "like": {
-        "url": "",
-        "data": ""
+        "uri": "",
+        "data": "",
+        "params": ""
     }
 }
