@@ -27,28 +27,29 @@ class InstagramRequestsWeb(BaseSocialRequests):
         :return: dict
         """
         try:
-            response = requests.post(main_url + uri, data=params)
+            headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) '
+                                     'AppleWebKit/537.36 (KHTML, like Gecko) '
+                                     'Chrome/88.0.4324.150 Safari/537.36',
+                       }
+            response = requests.post(main_url + uri, data=params, headers=headers)
         except requests.exceptions.ConnectionError as error:
-            print(error)
-            return {"status": False}
+            return {"status": False, "error": True, "error_type": error}
 
         if response.status_code == 200:
             data = json.loads(response.text)
             if data["status"]:
                 return {"status": data["status"]}
 
-        return {"status": False}
+        return {"status": False, "error": True, "error_type": response.status_code}
 
     def login(self, params: dict) -> dict:
         """
-        :param params:
-        :param login: str
-        :param password: str
+        :param params: dict
         :return: dict
         """
         response = self.make_request(self.requests_map["main_url"], self.requests_map["login"]["uri"], params)
-        print(response, 3500)
-        return dict()
+
+        return response
 
     def flipping_tape(self, url, params):
         pass

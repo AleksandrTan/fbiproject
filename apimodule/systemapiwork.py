@@ -23,8 +23,8 @@ class SystemApiRequests:
         url = self.api_url + uri
         try:
             response = requests.get(url)
-        except requests.exceptions.ConnectionError:
-            return {"status": False}
+        except requests.exceptions.ConnectionError as error:
+            return {"status": False, "error": True, "error_type": error}
 
         if response.status_code == 200:
             data = json.loads(response.text)

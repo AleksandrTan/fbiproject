@@ -1,9 +1,9 @@
 """
-Performs the task of implementing a login on a social network
+Performs the task of implementing a like on a social network
 """
 
 
-class LoginTask:
+class LikeTask:
 
     def __init__(self, social_api, account_data: dict):
         self.social_api = social_api

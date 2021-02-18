@@ -26,7 +26,7 @@ INSTAGRAM_WEB_DATA = {
     },
 
     "like": {
-        "uri": "",
+        "uri": "api/successlike/",
         "data": "",
         "params": ""
     }

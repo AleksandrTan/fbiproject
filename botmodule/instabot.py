@@ -8,6 +8,7 @@ import time
 
 from apimodule.systemapiwork import SystemApiRequests
 from taskmodule.logintask import LoginTask
+from taskmodule.liketask import LikeTask
 from socialapimodule.instarequestweb import InstagramRequestsWeb
 
 
@@ -34,7 +35,8 @@ class InstaBot:
         self.port_proxy = port_proxy
         self.social_api = social_api
         self.system_api = system_api
-        self.task_objects = dict({"login": LoginTask(self.social_api, self.account_data)})
+        self.task_objects = dict({"login": LoginTask(self.social_api, self.account_data),
+                                  "like": LikeTask(social_api, self.account_data)})
 
     def start(self):
         while self.execution_status:
@@ -47,7 +49,8 @@ class InstaBot:
                 time.sleep(10)
 
     def perform_task(self, task_object):
-        task_object.run()
+        data_result = task_object.run()
+        print(data_result)
         time.sleep(10)
         return True
 
