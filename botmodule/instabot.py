@@ -4,6 +4,8 @@ It is launched from the worker process, initialized, and then, using api,
 receives tasks that it performs, accompanying its work with logging at the database level,
 a file on the standard output stream.
 """
+import time
+
 from apimodule.systemapiwork import SystemApiRequests
 
 
@@ -29,14 +31,22 @@ class InstaBot:
         self.source_api = system_api
 
     def start(self):
-        pass
+        while self.execution_status:
+            new_task = self.get_new_task()
+            print(new_task)
+            if new_task["status"]:
+                self.perform_task()
+            else:
+                time.sleep(10)
 
     def perform_task(self):
-        pass
+        time.sleep(10)
+        return True
 
-    def get_new_task(self):
+    def get_new_task(self) -> dict:
         new_task = self.source_api.get_next_task()
-        print(new_task)
+
+        return new_task
 
     def send_data_api(self):
         pass
@@ -50,4 +60,4 @@ class InstaBot:
 
 if __name__ == "__main__":
     bot = InstaBot("http://proxyserver.com", 3500, "SocialApiObject", SystemApiRequests(1), 1)
-    bot.get_new_task()
+    bot.start()

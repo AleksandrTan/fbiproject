@@ -16,17 +16,20 @@ class SystemApiRequests:
 
     def get_next_task(self) -> dict:
         """
-        Get info about new task
+        Get params for new task
         :return: dict
         """
         uri = self.url_next_task.replace("id", str(self.individual_bot_id))
         url = self.api_url + uri
-        response = requests.get(url)
+        try:
+            response = requests.get(url)
+        except requests.exceptions.ConnectionError:
+            return {"status": False}
+
         if response.status_code == 200:
             data = json.loads(response.text)
-
             if data["status"]:
-                return {"status": data["status"], "task": data['tasks']}
+                return {"status": data["status"], "task": data['task_name']}
 
         return {"status": False}
 
