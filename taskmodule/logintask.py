@@ -1,6 +1,7 @@
 """
 Performs the task of implementing a login on a social network
 """
+from socialapimodule.requestsmapworker import RequestMapWorker
 
 
 class LoginTask:
