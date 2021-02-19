@@ -39,10 +39,10 @@ class InstaBot:
         self.port_proxy = port_proxy
         self.social_api = social_api
         self.system_api = system_api
-        self.task_objects = dict({"login": LoginTask(self.social_api, self.account_data),
-                                  "like": LikeTask(self.social_api, self.account_data),
-                                  "flipping_tape": FlippingTapeTask(self.social_api, self.account_data),
-                                  "subscribe": SubscribeTask(self.social_api, self.account_data)})
+        self.task_objects = dict({"login": LoginTask(self.social_api, self.account_data, self.individual_id),
+                                  "like": LikeTask(self.social_api, self.account_data, self.individual_id),
+                                  "flipping_tape": FlippingTapeTask(self.social_api, self.account_data, self.individual_id),
+                                  "subscribe": SubscribeTask(self.social_api, self.account_data, self.individual_id)})
 
     def start(self):
         logger.warning(f"Bot {self.individual_id} start working!!!")

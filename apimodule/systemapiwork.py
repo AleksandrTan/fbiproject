@@ -13,7 +13,8 @@ class SystemApiRequests:
     def __init__(self, individual_id: int):
         self.api_url = config.MAIN_API_URL
         self.url_next_task = config.NEXT_TASK_URL
-        self.url_task_report = config.TASK_RESULTS_REPORT
+        self.url_task_done = config.TASK_RESULT_DONE
+        self.url_task_fail = config.TASK_RESULT_FAIL
         self.individual_bot_id = individual_id
 
     def get_new_task(self) -> dict:
@@ -36,15 +37,21 @@ class SystemApiRequests:
 
         return {"status": False}
 
-    def task_report(self) -> bool:
+    def task_report(self, task_id: int, data_result: dict) -> bool:
         """
-        Send information about task results report
+        Report about task results
+        :param data_result: dict
+        :param task_id: int
         :return: dict
         """
-        uri = self.url_next_task.replace("id", str(self.individual_bot_id))
+        if data_result["status"]:
+            uri = self.url_task_done.replace("id", str(self.individual_bot_id)).replace("ib", str(task_id))
+        else:
+            uri = self.url_task_fail.replace("id", str(self.individual_bot_id)).replace("ib", str(task_id))
+
         url = self.api_url + uri
         try:
-            response = requests.get(url)
+            response = requests.post(url)
         except requests.exceptions.ConnectionError as error:
             logger.warning(f"{error}")
             return False
@@ -54,7 +61,7 @@ class SystemApiRequests:
             if data["status"]:
                 return True
 
-        return True
+        return False
 
 
 if __name__ == "__main__":
