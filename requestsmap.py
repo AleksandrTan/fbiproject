@@ -55,3 +55,30 @@ INSTAGRAM_WEB_DATA = {
         "params": ""
     }
 }
+
+INSTAGRAM_WEB_DATA_TEST = {
+    "main_url": "http://127.0.0.1:8000/",
+    "login": {
+        "uri": "api/successlogin/",
+        "data": "",
+        "params": ""
+    },
+
+    "like": {
+        "uri": "api/successlike/",
+        "data": "",
+        "params": ""
+    },
+
+    "flipping_type": {
+        "uri": "api/flippingtape/",
+        "data": "",
+        "params": ""
+    },
+
+    "subscribe": {
+        "uri": "api/subscribe/",
+        "data": "",
+        "params": ""
+    }
+}

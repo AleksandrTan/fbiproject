@@ -17,7 +17,7 @@ class InstagramRequestsWeb(BaseSocialRequests):
         """
         self.host_proxy = host_proxy
         self.port_proxy = port_proxy
-        self.requests_map = requestsmap.INSTAGRAM_WEB_DATA
+        self.requests_map = requestsmap.INSTAGRAM_WEB_DATA_TEST
 
     def make_request(self, main_url: str, uri: str, params: dict) -> dict:
         """
@@ -30,6 +30,8 @@ class InstagramRequestsWeb(BaseSocialRequests):
             headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) '
                                      'AppleWebKit/537.36 (KHTML, like Gecko) '
                                      'Chrome/88.0.4324.150 Safari/537.36',
+
+                       'Content-Type': 'application/x-www-form-urlencoded'
                        }
             response = requests.post(main_url + uri, data=params, headers=headers)
         except requests.exceptions.ConnectionError as error:
