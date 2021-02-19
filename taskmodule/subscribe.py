@@ -9,12 +9,12 @@ class SubscribeTask:
         self.social_api = social_api
         self.account_data = account_data
 
-    def run(self) -> dict:
+    def run(self, task_id: int) -> dict:
         """
         Run task
+        :param task_id: int
         :return: dict
         """
-        print("Task start working!!!")
         data_result = self.social_api.subscribe(self.account_data)
 
         return data_result

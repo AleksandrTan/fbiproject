@@ -51,20 +51,19 @@ class InstaBot:
             if new_task["status"]:
                 # run new task
                 sys.stdout.write(f"Task {new_task['task_name']} is running!\n")
-                self.perform_task(self.task_objects[new_task["task_name"]])
+                self.perform_task(self.task_objects[new_task["task_name"]], new_task['task_id'])
             else:
                 sys.stdout.write("No tasks, I work autonomously!\n")
-                self.perform_task(self.task_objects["flipping_tape"])
+                self.perform_task(self.task_objects["flipping_tape"], 3)
                 time.sleep(10)
 
-    def perform_task(self, task_object):
-        data_result = task_object.run()
-        print(data_result)
+    def perform_task(self, task_object, task_id):
+        task_object.run(task_id)
         time.sleep(10)
         return True
 
     def get_new_task(self) -> dict:
-        new_task = self.system_api.get_next_task()
+        new_task = self.system_api.get_new_task()
 
         return new_task
 
