@@ -1,5 +1,9 @@
+"""
+The file of settings for logging the operation of the system in the related work of the code
+"""
 import os
 import logging.config
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LOGGING_CONFIG = {

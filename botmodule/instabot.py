@@ -4,6 +4,7 @@ It is launched from the worker process, initialized, and then, using api,
 receives tasks that it performs, accompanying its work with logging at the database level,
 a file on the standard output stream.
 """
+import sys
 import time
 from logsource.logconfig import logger
 
@@ -49,10 +50,10 @@ class InstaBot:
             new_task = self.get_new_task()
             if new_task["status"]:
                 # run new task
-                print(f"Task {new_task['task_name']} is running!")
+                sys.stdout.write(f"Task {new_task['task_name']} is running!\n")
                 self.perform_task(self.task_objects[new_task["task_name"]])
             else:
-                print("No tasks, I work autonomously!")
+                sys.stdout.write("No tasks, I work autonomously!\n")
                 self.perform_task(self.task_objects["flipping_tape"])
                 time.sleep(10)
 

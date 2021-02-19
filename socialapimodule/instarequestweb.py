@@ -3,7 +3,6 @@ A class for making requests to the social network Instagram used web API
 """
 import requests
 import json
-
 from logsource.logconfig import logger
 from interfaces.apisocialinter import BaseSocialRequests
 import requestsmap
