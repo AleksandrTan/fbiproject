@@ -15,5 +15,9 @@ class BaseSocialRequests(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def flipping_tape(self, url: str, params: dict):
+    def like(self, params: dict):
+        pass
+
+    @abstractmethod
+    def flipping_tape(self, params: dict):
         pass

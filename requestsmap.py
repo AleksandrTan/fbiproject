@@ -29,5 +29,11 @@ INSTAGRAM_WEB_DATA = {
         "uri": "api/successlike/",
         "data": "",
         "params": ""
+    },
+
+    "flipping_type": {
+        "uri": "api/flippingtape/",
+        "data": "",
+        "params": ""
     }
 }

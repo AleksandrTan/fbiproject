@@ -10,6 +10,7 @@ from logsource.logconfig import logger
 from apimodule.systemapiwork import SystemApiRequests
 from taskmodule.logintask import LoginTask
 from taskmodule.liketask import LikeTask
+from taskmodule.flipping_tape import FlippingTapeTask
 from socialapimodule.instarequestweb import InstagramRequestsWeb
 
 
@@ -37,17 +38,19 @@ class InstaBot:
         self.social_api = social_api
         self.system_api = system_api
         self.task_objects = dict({"login": LoginTask(self.social_api, self.account_data),
-                                  "like": LikeTask(social_api, self.account_data)})
+                                  "like": LikeTask(social_api, self.account_data),
+                                  "flipping_tape": FlippingTapeTask(social_api, self.account_data)})
 
     def start(self):
         logger.warning(f"Bot {self.individual_id} start working!!!")
         while self.execution_status:
             new_task = self.get_new_task()
-            print(new_task)
             if new_task["status"]:
                 # run new task
+                print(f"Task {new_task['task_name']} is running!")
                 self.perform_task(self.task_objects[new_task["task_name"]])
             else:
+                print("No tasks, I work autonomously!")
                 time.sleep(10)
 
     def perform_task(self, task_object):

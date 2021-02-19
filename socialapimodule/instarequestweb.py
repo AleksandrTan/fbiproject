@@ -53,5 +53,20 @@ class InstagramRequestsWeb(BaseSocialRequests):
 
         return response
 
-    def flipping_tape(self, url, params):
-        pass
+    def like(self, params: dict) -> dict:
+        """
+        :param params: dict
+        :return: dict
+        """
+        response = self.make_request(self.requests_map["main_url"], self.requests_map["like"]["uri"], params)
+
+        return response
+
+    def flipping_tape(self, params: dict) -> dict:
+        """
+        :param params: dict
+        :return: dict
+        """
+        response = self.make_request(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"], params)
+
+        return response

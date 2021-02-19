@@ -1,9 +1,9 @@
 """
-Performs the task of implementing a like on a social network
+Performs the flipping tape of implementing a like on a social network
 """
 
 
-class LikeTask:
+class FlippingTapeTask:
 
     def __init__(self, social_api, account_data: dict):
         self.social_api = social_api
@@ -15,6 +15,6 @@ class LikeTask:
         :return: dict
         """
         print("Task start working!!!")
-        data_result = self.social_api.like(self.account_data)
+        data_result = self.social_api.flipping_tape(self.account_data)
 
         return data_result
