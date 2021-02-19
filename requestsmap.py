@@ -21,6 +21,7 @@ INSTAGRAM_MOBILE_DATA = {
         "data": "",
         "params": ""
     },
+
     "subscribe": {
         "uri": "api/subscribe/",
         "data": "",
@@ -47,6 +48,7 @@ INSTAGRAM_WEB_DATA = {
         "data": "",
         "params": ""
     },
+
     "subscribe": {
         "uri": "api/subscribe/",
         "data": "",

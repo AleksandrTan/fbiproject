@@ -41,17 +41,24 @@ class InstaBot:
         self.system_api = system_api
         self.task_objects = dict({"login": LoginTask(self.social_api, self.account_data, self.individual_id),
                                   "like": LikeTask(self.social_api, self.account_data, self.individual_id),
-                                  "flipping_tape": FlippingTapeTask(self.social_api, self.account_data, self.individual_id),
+                                  "flipping_tape": FlippingTapeTask(self.social_api, self.account_data,
+                                                                    self.individual_id),
                                   "subscribe": SubscribeTask(self.social_api, self.account_data, self.individual_id)})
 
     def start(self):
         logger.warning(f"Bot {self.individual_id} start working!!!")
+
         while self.execution_status:
             new_task = self.get_new_task()
             if new_task["status"]:
                 # run new task
                 sys.stdout.write(f"Task {new_task['task_name']} is running!\n")
                 self.perform_task(self.task_objects[new_task["task_name"]], new_task['task_id'])
+
+            elif new_task["error"]:
+                sys.stdout.write("Server error!!!\n")
+                time.sleep(10)
+
             else:
                 sys.stdout.write("No tasks, I work autonomously!\n")
                 self.perform_task(self.task_objects["flipping_tape"], 3)
