@@ -70,3 +70,12 @@ class InstagramRequestsWeb(BaseSocialRequests):
         response = self.make_request(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"], params)
 
         return response
+
+    def subscribe(self, params: dict) -> dict:
+        """
+        :param params: dict
+        :return: dict
+        """
+        response = self.make_request(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params)
+
+        return response

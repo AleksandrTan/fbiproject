@@ -21,3 +21,7 @@ class BaseSocialRequests(metaclass=ABCMeta):
     @abstractmethod
     def flipping_tape(self, params: dict):
         pass
+
+    @abstractmethod
+    def subscribe(self, params: dict):
+        pass

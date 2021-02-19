@@ -3,15 +3,26 @@ Settings file for queries to social networks API
 """
 
 INSTAGRAM_MOBILE_DATA = {
-    "main_url": "",
+    "main_url": "http://127.0.0.1:8000/",
     "login": {
-        "uri": "",
+        "uri": "api/successlogin/",
         "data": "",
         "params": ""
     },
 
     "like": {
-        "uri": "",
+        "uri": "api/successlike/",
+        "data": "",
+        "params": ""
+    },
+
+    "flipping_type": {
+        "uri": "api/flippingtape/",
+        "data": "",
+        "params": ""
+    },
+    "subscribe": {
+        "uri": "api/subscribe/",
         "data": "",
         "params": ""
     }
@@ -33,6 +44,11 @@ INSTAGRAM_WEB_DATA = {
 
     "flipping_type": {
         "uri": "api/flippingtape/",
+        "data": "",
+        "params": ""
+    },
+    "subscribe": {
+        "uri": "api/subscribe/",
         "data": "",
         "params": ""
     }
