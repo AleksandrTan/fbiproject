@@ -19,7 +19,6 @@ class LoginTask:
         :return: dict
         """
         data_result = self.social_api.login(self.account_data)
-        print("Task result", data_result)
         sys_report = SystemApiRequests(self.individual_id)
         # send report to api
         sys_report.task_report(task_id, data_result)

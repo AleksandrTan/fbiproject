@@ -82,6 +82,7 @@ class InstagramRequestsWeb(BaseSocialRequests):
                 authorization_data['id_did'] = headers['id_did']
                 authorization_data['csrftoken'] = headers['csrftoken']
                 authorization_data['mid'] = headers['mid']
+                authorization_data['ig_nrcb'] = headers['ig_nrcb']
                 return {"status": True, "error": False, 'authorization_data': authorization_data}
         logger.warning(f"Authorization instagram error - {response.text}")
         logger.warning(f"Error response code - {response.status_code}")
