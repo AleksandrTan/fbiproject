@@ -50,7 +50,7 @@ class InstaBot:
         logger.warning(f"Bot {self.individual_id} start working!!!")
         # log in to the social network
         if self.login_task:
-            data_authorization = self.perform_task(self.task_objects['login'], 1)
+            data_authorization = self.perform_task(self.task_objects['login'], 0)
             if not data_authorization['status']:
                 logger.warning(f"The authorization process for the bot number {self.individual_id} was not correct.!!!")
                 return
@@ -77,7 +77,7 @@ class InstaBot:
                 continue
 
     def perform_task(self, task_object, task_id):
-        data_task = task_object.run(task_id)
+        data_task = task_object.run(task_id, self.authorization_data)
         time.sleep(10)
         return data_task
 

@@ -47,8 +47,8 @@ class InstagramRequestsWeb(BaseSocialRequests):
         if response.status_code == 200:
             data = json.loads(response.text)
             print("login", data)
-            if data["status"] == 'ok' and data['authenticated'] == 'true':
-                return {"status": True, 'authorization_data': authorization_data}
+            return {"status": True, "response_data": json.loads(response.text),
+                    'authorization_data': authorization_data}
 
         logger.warning(f"Error response code - {response.status_code}")
         return {"status": False, "error": True, "error_type": response.status_code}
@@ -66,7 +66,6 @@ class InstagramRequestsWeb(BaseSocialRequests):
                                      'Chrome/88.0.4324.150 Safari/537.36'
                        }
             response = requests.post(main_url + uri, data=params, headers=headers)
-            print(response.headers)
         except requests.exceptions.ConnectionError as error:
             logger.warning(f"Authorization instagram error - {error}")
             return {"status": False, "error": True, "error_type": error}
@@ -114,6 +113,11 @@ class InstagramRequestsWeb(BaseSocialRequests):
             response = self.make_request(self.requests_map["main_url"], self.requests_map["login"]["uri"],
                                          user_data, authorization_data['authorization_data'])
 
+            if response["status"]:
+                if response["response_data"]["status"] == 'ok' and response["response_data"]['authenticated'] == 'true':
+                    return {"status": True, "response_data": response,
+                            'authorization_data': authorization_data['authorization_data']}
+
             return response
 
         return {"status": False}
@@ -126,7 +130,7 @@ class InstagramRequestsWeb(BaseSocialRequests):
         """
         response = self.make_request(self.requests_map["main_url"], self.requests_map["like"]["uri"], params,
                                      authorization_data)
-
+        print(4000, response)
         return response
 
     def flipping_tape(self, params: dict, authorization_data: dict) -> dict:
@@ -137,7 +141,7 @@ class InstagramRequestsWeb(BaseSocialRequests):
         """
         response = self.make_request(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"], params,
                                      authorization_data)
-
+        print(4000, response)
         return response
 
     def subscribe(self, params: dict, authorization_data: dict) -> dict:
@@ -148,5 +152,5 @@ class InstagramRequestsWeb(BaseSocialRequests):
         """
         response = self.make_request(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params,
                                      authorization_data)
-
+        print(4000, response)
         return response

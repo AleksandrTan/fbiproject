@@ -18,7 +18,7 @@ class SubscribeTask:
         :param task_id: int
         :return: dict
         """
-        data_result = self.social_api.subscribe({},authorization_data)
+        data_result = self.social_api.subscribe({}, authorization_data)
         sys_report = SystemApiRequests(self.individual_id)
         # send report to api
         sys_report.task_report(task_id, data_result)
