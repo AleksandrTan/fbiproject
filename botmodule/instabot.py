@@ -54,6 +54,7 @@ class InstaBot:
             if not data_authorization['status']:
                 logger.warning(f"The authorization process for the bot number {self.individual_id} was not correct.!!!")
                 return
+            self.authorization_data = data_authorization["authorization_data"]
 
         while self.execution_status:
             new_task = self.get_new_task()
