@@ -27,7 +27,7 @@ class InstaBot:
         :param social_api: object InstagramRequestsWeb or InstagramRequestsMobile
         :param system_api: object SystemApiRequests
         :param login_task: bool
-        individual identifier
+        individual bot identifier
         :param individual_id: int
         :param account_data: dict
         """
@@ -52,6 +52,8 @@ class InstaBot:
         if self.login_task:
             data_authorization = self.perform_task(self.task_objects['login'], 0)
             if not data_authorization['status']:
+                sys.stdout.write(f"The authorization process for the bot"
+                                 f" number {self.individual_id} was not correct.!!!")
                 logger.warning(f"The authorization process for the bot number {self.individual_id} was not correct.!!!")
                 return
             self.authorization_data = data_authorization["authorization_data"]

@@ -65,7 +65,7 @@ class InstagramRequestsWeb(BaseSocialRequests):
                                      'AppleWebKit/537.36 (KHTML, like Gecko) '
                                      'Chrome/88.0.4324.150 Safari/537.36'
                        }
-            response = requests.post(main_url + uri, data=params, headers=headers)
+            response = requests.get(main_url + uri, headers=headers)
         except requests.exceptions.ConnectionError as error:
             logger.warning(f"Authorization instagram error - {error}")
             return {"status": False, "error": True, "error_type": error}
@@ -129,7 +129,7 @@ class InstagramRequestsWeb(BaseSocialRequests):
         """
         response = self.make_request(self.requests_map["main_url"], self.requests_map["like"]["uri"], params,
                                      authorization_data)
-        print(4000, response)
+        print(4000, authorization_data)
         return response
 
     def flipping_tape(self, params: dict, authorization_data: dict) -> dict:
@@ -140,7 +140,7 @@ class InstagramRequestsWeb(BaseSocialRequests):
         """
         response = self.make_request(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"], params,
                                      authorization_data)
-        print(4000, response)
+        print(4000, authorization_data)
         return response
 
     def subscribe(self, params: dict, authorization_data: dict) -> dict:
@@ -151,5 +151,5 @@ class InstagramRequestsWeb(BaseSocialRequests):
         """
         response = self.make_request(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params,
                                      authorization_data)
-        print(4000, response)
+        print(4000, authorization_data)
         return response

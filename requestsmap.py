@@ -46,7 +46,7 @@ INSTAGRAM_WEB_DATA = {
     },
 
     "login": {
-        "uri": "api/successlogin/",
+        "uri": "api/accounts/login/ajax/",
         "data": "",
         "params": ""
     },
