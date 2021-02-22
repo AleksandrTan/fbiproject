@@ -118,8 +118,6 @@ class InstagramRequestsWeb(BaseSocialRequests):
                     return {"status": True, "response_data": response,
                             'authorization_data': authorization_data['authorization_data']}
 
-            return response
-
         return {"status": False}
 
     def like(self, params: dict, authorization_data: dict) -> dict:
