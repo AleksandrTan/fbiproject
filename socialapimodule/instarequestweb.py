@@ -17,10 +17,11 @@ class InstagramRequestsWeb(BaseSocialRequests):
         """
         self.host_proxy = host_proxy
         self.port_proxy = port_proxy
-        self.requests_map = requestsmap.INSTAGRAM_WEB_DATA_TEST
+        self.requests_map = requestsmap.INSTAGRAM_WEB_DATA
 
-    def make_request(self, main_url: str, uri: str, params: dict) -> dict:
+    def make_request(self, main_url: str, uri: str, params: dict, authorization_data: dict) -> dict:
         """
+        :param authorization_data: dict
         :param main_url: str
         :param uri: str
         :param params: dict
@@ -30,10 +31,9 @@ class InstagramRequestsWeb(BaseSocialRequests):
             headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) '
                                      'AppleWebKit/537.36 (KHTML, like Gecko) '
                                      'Chrome/88.0.4324.150 Safari/537.36',
-
                        'Content-Type': 'application/x-www-form-urlencoded',
                        'x-ig-app-id': '1217981644879628',
-                       'x-csrftoken': '7PdmQhv7WIih1qqlqXwZ62nsacYQSSaB'
+                       'x-csrftoken': authorization_data['csrftoken']
                        }
             response = requests.post(main_url + uri, data=params, headers=headers)
             print(response.headers)
@@ -46,8 +46,10 @@ class InstagramRequestsWeb(BaseSocialRequests):
 
         if response.status_code == 200:
             data = json.loads(response.text)
-            if data["status"]:
-                return {"status": data["status"]}
+            print("login", data)
+            if data["status"] == 'ok' and data['authenticated'] == 'true':
+                return {"status": True, 'authorization_data': authorization_data}
+
         logger.warning(f"Error response code - {response.status_code}")
         return {"status": False, "error": True, "error_type": response.status_code}
 
@@ -61,11 +63,7 @@ class InstagramRequestsWeb(BaseSocialRequests):
         try:
             headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) '
                                      'AppleWebKit/537.36 (KHTML, like Gecko) '
-                                     'Chrome/88.0.4324.150 Safari/537.36',
-
-                       'Content-Type': 'application/x-www-form-urlencoded',
-                       'x-ig-app-id': '1217981644879628',
-                       'x-csrftoken': '7PdmQhv7WIih1qqlqXwZ62nsacYQSSaB'
+                                     'Chrome/88.0.4324.150 Safari/537.36'
                        }
             response = requests.post(main_url + uri, data=params, headers=headers)
             print(response.headers)
@@ -77,10 +75,15 @@ class InstagramRequestsWeb(BaseSocialRequests):
             return {"status": False, "error": True, "error_type": error}
 
         if response.status_code == 200:
+            authorization_data = dict()
             data = json.loads(response.text)
             headers = response.headers
-            if data["status"]:
-                return {"status": data["status"]}
+
+            if headers['csrftoken']:
+                authorization_data['id_did'] = headers['id_did']
+                authorization_data['csrftoken'] = headers['csrftoken']
+                authorization_data['mid'] = headers['mid']
+                return {"status": True, "error": False, 'authorization_data': authorization_data}
         logger.warning(f"Error response code - {response.status_code}")
         return {"status": False, "error": True, "error_type": response.status_code}
 
@@ -89,7 +92,8 @@ class InstagramRequestsWeb(BaseSocialRequests):
         :param params: dict
         :return: dict
         """
-        response = self.make_request_authorization(self.requests_map["main_url"], self.requests_map["login"]["uri"], params)
+        response = self.make_request_authorization(self.requests_map["main_url"],
+                                                   self.requests_map["authorization"]["uri"], params)
 
         return response
 
@@ -98,9 +102,20 @@ class InstagramRequestsWeb(BaseSocialRequests):
         :param params: dict
         :return: dict
         """
-        response = self.make_request(self.requests_map["main_url"], self.requests_map["login"]["uri"], params)
+        authorization_data = self.authorization(params)
+        print('Auth data', authorization_data)
+        if authorization_data['status']:
+            user_data = dict()
+            user_data['username'] = params['username']
+            user_data['password'] = params['password']
+            user_data['queryParams'] = {}
+            user_data['optIntoOneTap'] = False
+            response = self.make_request(self.requests_map["main_url"], self.requests_map["login"]["uri"],
+                                         user_data, authorization_data['authorization_data'])
 
-        return response
+            return response
+
+        return {"status": False}
 
     def like(self, params: dict) -> dict:
         """

@@ -11,11 +11,11 @@ class BaseSocialRequests(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def make_request(self, main_url: str, uri: str, params: dict):
+    def make_request(self, main_url: str, uri: str, params: dict, authorization_data: dict):
         pass
 
     @abstractmethod
-    def autorization(self, params: dict):
+    def authorization(self, params: dict):
         pass
 
     @abstractmethod

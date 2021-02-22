@@ -87,5 +87,5 @@ class InstaBot:
 
 if __name__ == "__main__":
     bot = InstaBot("http://localhost", 3500, InstagramRequestsWeb("http://localhost", 8000),
-                   SystemApiRequests(1), 1, {"login": "rumych2013@gmail.com", "password": 1234567})
+                   SystemApiRequests(1), 1, {"username": "rumych2013@gmail.com", "password": 1234567})
     bot.start()
