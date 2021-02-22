@@ -3,6 +3,7 @@ Performs the task of implementing a like on a social network
 """
 from apimodule.systemapiwork import SystemApiRequests
 
+
 class LikeTask:
 
     def __init__(self, social_api, account_data: dict, individual_bot_id: int):

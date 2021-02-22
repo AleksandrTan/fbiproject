@@ -7,7 +7,15 @@ from abc import ABCMeta, abstractmethod
 class BaseSocialRequests(metaclass=ABCMeta):
 
     @abstractmethod
+    def make_request_authorization(self, main_url: str, uri: str, params: dict):
+        pass
+
+    @abstractmethod
     def make_request(self, main_url: str, uri: str, params: dict):
+        pass
+
+    @abstractmethod
+    def autorization(self, params: dict):
         pass
 
     @abstractmethod

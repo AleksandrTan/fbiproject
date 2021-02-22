@@ -31,10 +31,16 @@ class InstagramRequestsWeb(BaseSocialRequests):
                                      'AppleWebKit/537.36 (KHTML, like Gecko) '
                                      'Chrome/88.0.4324.150 Safari/537.36',
 
-                       'Content-Type': 'application/x-www-form-urlencoded'
+                       'Content-Type': 'application/x-www-form-urlencoded',
+                       'x-ig-app-id': '1217981644879628',
+                       'x-csrftoken': '7PdmQhv7WIih1qqlqXwZ62nsacYQSSaB'
                        }
             response = requests.post(main_url + uri, data=params, headers=headers)
+            print(response.headers)
         except requests.exceptions.ConnectionError as error:
+            logger.warning(f"{error}")
+            return {"status": False, "error": True, "error_type": error}
+        except KeyError as error:
             logger.warning(f"{error}")
             return {"status": False, "error": True, "error_type": error}
 
@@ -44,6 +50,48 @@ class InstagramRequestsWeb(BaseSocialRequests):
                 return {"status": data["status"]}
         logger.warning(f"Error response code - {response.status_code}")
         return {"status": False, "error": True, "error_type": response.status_code}
+
+    def make_request_authorization(self, main_url: str, uri: str, params: dict) -> dict:
+        """
+        :param main_url: str
+        :param uri: str
+        :param params: dict
+        :return: dict
+        """
+        try:
+            headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) '
+                                     'AppleWebKit/537.36 (KHTML, like Gecko) '
+                                     'Chrome/88.0.4324.150 Safari/537.36',
+
+                       'Content-Type': 'application/x-www-form-urlencoded',
+                       'x-ig-app-id': '1217981644879628',
+                       'x-csrftoken': '7PdmQhv7WIih1qqlqXwZ62nsacYQSSaB'
+                       }
+            response = requests.post(main_url + uri, data=params, headers=headers)
+            print(response.headers)
+        except requests.exceptions.ConnectionError as error:
+            logger.warning(f"{error}")
+            return {"status": False, "error": True, "error_type": error}
+        except KeyError as error:
+            logger.warning(f"{error}")
+            return {"status": False, "error": True, "error_type": error}
+
+        if response.status_code == 200:
+            data = json.loads(response.text)
+            headers = response.headers
+            if data["status"]:
+                return {"status": data["status"]}
+        logger.warning(f"Error response code - {response.status_code}")
+        return {"status": False, "error": True, "error_type": response.status_code}
+
+    def authorization(self, params: dict) -> dict:
+        """
+        :param params: dict
+        :return: dict
+        """
+        response = self.make_request_authorization(self.requests_map["main_url"], self.requests_map["login"]["uri"], params)
+
+        return response
 
     def login(self, params: dict) -> dict:
         """
