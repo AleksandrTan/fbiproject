@@ -68,10 +68,10 @@ class InstagramRequestsWeb(BaseSocialRequests):
             response = requests.post(main_url + uri, data=params, headers=headers)
             print(response.headers)
         except requests.exceptions.ConnectionError as error:
-            logger.warning(f"{error}")
+            logger.warning(f"Authorization instagram error - {error}")
             return {"status": False, "error": True, "error_type": error}
         except KeyError as error:
-            logger.warning(f"{error}")
+            logger.warning(f"Authorization instagram error - {error}")
             return {"status": False, "error": True, "error_type": error}
 
         if response.status_code == 200:
@@ -84,6 +84,7 @@ class InstagramRequestsWeb(BaseSocialRequests):
                 authorization_data['csrftoken'] = headers['csrftoken']
                 authorization_data['mid'] = headers['mid']
                 return {"status": True, "error": False, 'authorization_data': authorization_data}
+        logger.warning(f"Authorization instagram error - {response.text}")
         logger.warning(f"Error response code - {response.status_code}")
         return {"status": False, "error": True, "error_type": response.status_code}
 
@@ -117,29 +118,35 @@ class InstagramRequestsWeb(BaseSocialRequests):
 
         return {"status": False}
 
-    def like(self, params: dict) -> dict:
+    def like(self, params: dict, authorization_data: dict) -> dict:
         """
+        :param authorization_data: dict
         :param params: dict
         :return: dict
         """
-        response = self.make_request(self.requests_map["main_url"], self.requests_map["like"]["uri"], params)
+        response = self.make_request(self.requests_map["main_url"], self.requests_map["like"]["uri"], params,
+                                     authorization_data)
 
         return response
 
-    def flipping_tape(self, params: dict) -> dict:
+    def flipping_tape(self, params: dict, authorization_data: dict) -> dict:
         """
+        :param authorization_data: dict
         :param params: dict
         :return: dict
         """
-        response = self.make_request(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"], params)
+        response = self.make_request(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"], params,
+                                     authorization_data)
 
         return response
 
-    def subscribe(self, params: dict) -> dict:
+    def subscribe(self, params: dict, authorization_data: dict) -> dict:
         """
+        :param authorization_data: dict
         :param params: dict
         :return: dict
         """
-        response = self.make_request(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params)
+        response = self.make_request(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params,
+                                     authorization_data)
 
         return response

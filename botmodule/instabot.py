@@ -39,6 +39,7 @@ class InstaBot:
         self.port_proxy = port_proxy
         self.social_api = social_api
         self.system_api = system_api
+        self.authorization_data = dict()
         self.task_objects = dict({"login": LoginTask(self.social_api, self.account_data, self.individual_id),
                                   "like": LikeTask(self.social_api, self.account_data, self.individual_id),
                                   "flipping_tape": FlippingTapeTask(self.social_api, self.account_data,
@@ -47,6 +48,12 @@ class InstaBot:
 
     def start(self):
         logger.warning(f"Bot {self.individual_id} start working!!!")
+        # log in to the social network
+        if self.login_task:
+            data_authorization = self.perform_task(self.task_objects['login'], 1)
+            if not data_authorization['status']:
+                logger.warning(f"The authorization process for the bot number {self.individual_id} was not correct.!!!")
+                return
 
         while self.execution_status:
             new_task = self.get_new_task()
@@ -69,9 +76,9 @@ class InstaBot:
                 continue
 
     def perform_task(self, task_object, task_id):
-        task_object.run(task_id)
+        data_task = task_object.run(task_id)
         time.sleep(10)
-        return True
+        return data_task
 
     def get_new_task(self) -> dict:
         new_task = self.system_api.get_new_task()

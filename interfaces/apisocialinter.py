@@ -23,13 +23,13 @@ class BaseSocialRequests(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def like(self, params: dict):
+    def like(self, params: dict, authorization_data: dict):
         pass
 
     @abstractmethod
-    def flipping_tape(self, params: dict):
+    def flipping_tape(self, params: dict, authorization_data: dict):
         pass
 
     @abstractmethod
-    def subscribe(self, params: dict):
+    def subscribe(self, params: dict, authorization_data: dict):
         pass
