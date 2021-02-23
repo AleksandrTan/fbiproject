@@ -17,9 +17,19 @@ class LoginTask:
         :param task_id: int
         :return: dict
         """
-        data_result = self.social_api.login(self.account_data)
+        initialization_parameters = self.initialization_parameters()
+        data_result = self.social_api.login(self.account_data, initialization_parameters)
         sys_report = SystemApiRequests(self.individual_id)
         # send report to api
         sys_report.task_report(task_id, data_result)
 
         return data_result
+
+    def initialization_parameters(self) -> dict:
+        """
+        Initialization of account parameters for login request
+        :return: dict
+        """
+
+        params = dict()
+        return params

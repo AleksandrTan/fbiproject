@@ -84,8 +84,9 @@ class InstagramRequestsMobile:
 
         return response
 
-    def login(self, params: dict) -> dict:
+    def login(self, account_data: dict, params: dict) -> dict:
         """
+        :param account_data: dict
         :param params: dict
         :return: dict
         """
