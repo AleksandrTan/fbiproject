@@ -3,6 +3,8 @@ Settings file for queries to social networks API
 """
 
 INSTAGRAM_MOBILE_DATA = {
+    # 'https://i.instagram.com/api/v1/'
+
     "main_url": "http://127.0.0.1:8000/",
 
     "authorization": {
@@ -12,7 +14,7 @@ INSTAGRAM_MOBILE_DATA = {
     },
 
     "login": {
-        "uri": "api/successlogin/",
+        "uri": "accounts/login/",
         "data": "",
         "params": ""
     },

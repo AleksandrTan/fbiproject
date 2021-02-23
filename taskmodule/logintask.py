@@ -11,10 +11,9 @@ class LoginTask:
         self.account_data = account_data
         self.individual_id = individual_bot_id
 
-    def run(self, task_id: int,  authorization_data: dict) -> dict:
+    def run(self, task_id: int) -> dict:
         """
         Run task
-        :param authorization_data: dict
         :param task_id: int
         :return: dict
         """
