@@ -8,11 +8,8 @@ import sys
 import time
 from logsource.logconfig import logger
 
+from taskmodule.inittask import InitTasks
 from apimodule.systemapiwork import SystemApiRequests
-from taskmodule.logintask import LoginTask
-from taskmodule.liketask import LikeTask
-from taskmodule.flipping_tape import FlippingTapeTask
-from taskmodule.subscribe import SubscribeTask
 from socialapimodule.instarequestweb import InstagramRequestsWeb
 
 
@@ -40,11 +37,8 @@ class InstaBot:
         self.social_api = social_api
         self.system_api = system_api
         self.authorization_data = dict()
-        self.task_objects = dict({"login": LoginTask(self.social_api, self.account_data, self.individual_id),
-                                  "like": LikeTask(self.social_api, self.account_data, self.individual_id),
-                                  "flipping_tape": FlippingTapeTask(self.social_api, self.account_data,
-                                                                    self.individual_id),
-                                  "subscribe": SubscribeTask(self.social_api, self.account_data, self.individual_id)})
+        self.tasks = InitTasks(self.host_proxy, self.port_proxy, self.individual_id, self.account_data)
+        self.task_objects = self.tasks.get_init_tasks()
 
     def start(self):
         logger.warning(f"Bot {self.individual_id} start working!!!")
