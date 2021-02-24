@@ -1,7 +1,7 @@
 """
 Class for working with the request file requestsmap.py
 """
-import requestsmap
+from settings import requestsmap
 
 
 class RequestMapWorker:

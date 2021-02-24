@@ -3,9 +3,18 @@ Settings file for queries to social networks API
 """
 
 INSTAGRAM_MOBILE_DATA = {
-    "main_url": "http://127.0.0.1:8000/",
+    # 'https://i.instagram.com/api/v1/'
+
+    "main_url": "http://127.0.0.1:8000/api/v1/",
+
+    "authorization": {
+        "uri": "authorization/",
+        "data": "",
+        "params": ""
+    },
+
     "login": {
-        "uri": "api/successlogin/",
+        "uri": "accounts/login/",
         "data": "",
         "params": ""
     },
@@ -21,6 +30,7 @@ INSTAGRAM_MOBILE_DATA = {
         "data": "",
         "params": ""
     },
+
     "subscribe": {
         "uri": "api/subscribe/",
         "data": "",
@@ -30,8 +40,15 @@ INSTAGRAM_MOBILE_DATA = {
 
 INSTAGRAM_WEB_DATA = {
     "main_url": "http://127.0.0.1:8000/",
+
+    "authorization": {
+        "uri": "api/authorization/",
+        "data": "",
+        "params": ""
+    },
+
     "login": {
-        "uri": "api/successlogin/",
+        "uri": "api/accounts/login/ajax/",
         "data": "",
         "params": ""
     },
@@ -47,6 +64,7 @@ INSTAGRAM_WEB_DATA = {
         "data": "",
         "params": ""
     },
+
     "subscribe": {
         "uri": "api/subscribe/",
         "data": "",

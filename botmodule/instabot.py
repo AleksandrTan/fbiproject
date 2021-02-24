@@ -6,13 +6,10 @@ a file on the standard output stream.
 """
 import sys
 import time
-from logsource.logconfig import logger
 
+from logsource.logconfig import logger
+from taskmodule.inittask import InitTasks
 from apimodule.systemapiwork import SystemApiRequests
-from taskmodule.logintask import LoginTask
-from taskmodule.liketask import LikeTask
-from taskmodule.flipping_tape import FlippingTapeTask
-from taskmodule.subscribe import SubscribeTask
 from socialapimodule.instarequestweb import InstagramRequestsWeb
 
 
@@ -27,7 +24,7 @@ class InstaBot:
         :param social_api: object InstagramRequestsWeb or InstagramRequestsMobile
         :param system_api: object SystemApiRequests
         :param login_task: bool
-        individual identifier
+        individual bot identifier
         :param individual_id: int
         :param account_data: dict
         """
@@ -39,42 +36,61 @@ class InstaBot:
         self.port_proxy = port_proxy
         self.social_api = social_api
         self.system_api = system_api
-        self.task_objects = dict({"login": LoginTask(self.social_api, self.account_data, self.individual_id),
-                                  "like": LikeTask(self.social_api, self.account_data, self.individual_id),
-                                  "flipping_tape": FlippingTapeTask(self.social_api, self.account_data, self.individual_id),
-                                  "subscribe": SubscribeTask(self.social_api, self.account_data, self.individual_id)})
+        self.authorization_data = dict()
+        self.tasks = InitTasks(self.host_proxy, self.port_proxy, self.individual_id, self.account_data)
+        self.task_objects = self.tasks.get_init_tasks()
+        self.session_parameters = dict()  # account session parameters for a work session
 
     def start(self):
         logger.warning(f"Bot {self.individual_id} start working!!!")
+        # log in to the social network
+        if self.login_task:
+            data_authorization = self._perform_task(self.task_objects['login'], 0)
+            if not data_authorization['status']:
+                sys.stdout.write(f"The authorization process for the bot"
+                                 f" number {self.individual_id} was not correct.!!!")
+                logger.warning(f"The authorization process for the bot number {self.individual_id} was not correct.!!!")
+                return
+            self.authorization_data = data_authorization["authorization_data"]
+
         while self.execution_status:
-            new_task = self.get_new_task()
+            new_task = self._get_new_task()
+
             if new_task["status"]:
                 # run new task
                 sys.stdout.write(f"Task {new_task['task_name']} is running!\n")
-                self.perform_task(self.task_objects[new_task["task_name"]], new_task['task_id'])
+                self._perform_task(self.task_objects[new_task["task_name"]], new_task['task_id'])
+                continue
+
+            elif new_task["error"]:
+                sys.stdout.write("Server error!!!\n")
+                time.sleep(10)
+                continue
+
             else:
                 sys.stdout.write("No tasks, I work autonomously!\n")
-                self.perform_task(self.task_objects["flipping_tape"], 3)
+                self._perform_task(self.task_objects["flipping_tape"], 3)
                 time.sleep(10)
+                continue
 
-    def perform_task(self, task_object, task_id):
-        task_object.run(task_id)
+    def _perform_task(self, task_object, task_id):
+        data_task = task_object.run(task_id, self.authorization_data)
         time.sleep(10)
-        return True
+        return data_task
 
-    def get_new_task(self) -> dict:
+    def _get_new_task(self) -> dict:
         new_task = self.system_api.get_new_task()
 
         return new_task
 
-    def send_data_api(self, data):
+    def _send_data_api(self, data):
         logger.warning(f"Bot {data} start working!!!")
 
-    def set_log_record_api(self):
+    def _set_log_record_api(self):
         pass
 
 
 if __name__ == "__main__":
     bot = InstaBot("http://localhost", 3500, InstagramRequestsWeb("http://localhost", 8000),
-                   SystemApiRequests(1), 1, {"login": "rumych2013@gmail.com", "password": 1234567})
+                   SystemApiRequests(1), 1, {"username": "rumych2013@gmail.com", "password": 1234567})
     bot.start()

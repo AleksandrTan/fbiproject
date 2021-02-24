@@ -33,9 +33,10 @@ class SystemApiRequests:
         if response.status_code == 200:
             data = json.loads(response.text)
             if data["status"]:
-                return {"status": data["status"], "task_name": data['task_name'], "task_id": data['task_id']}
+                return {"status": data["status"], "error": False, "task_name": data['task_name'],
+                        "task_id": data['task_id']}
 
-        return {"status": False}
+        return {"status": False, "error": False}
 
     def task_report(self, task_id: int, data_result: dict) -> bool:
         """
