@@ -4,6 +4,8 @@ Parameters and headers are pre-initialized. Prerequisites for initializing the d
 and the login request itself are performed.
 """
 from apimodule.systemapiwork import SystemApiRequests
+from core.initheaders import InitHeaders
+from core.initparams import InitParams
 
 
 class LoginTask:
@@ -26,16 +28,16 @@ class LoginTask:
         initialization_parameters = self.initialization_parameters()
 
         # initialize request headers
-        initialization_headers = self.initialization_headers()
+        initialization_headers = self.initialization_headers(initialization_parameters)
 
         # run pre-requests
         pre_requests = self.run_pre_requests()
 
         # run login
-        data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
-        sys_report = SystemApiRequests(self.individual_id)
+        # data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
+        # sys_report = SystemApiRequests(self.individual_id)
         # send report to api
-        sys_report.task_report(task_id, data)
+        # sys_report.task_report(task_id, data)
 
         return data
 
@@ -44,18 +46,17 @@ class LoginTask:
         Initialization of account parameters for login request
         :return: dict
         """
+        params = InitParams()
+        return params.get_params()
 
-        params = dict()
-        return params
-
-    def initialization_headers(self) -> dict:
+    def initialization_headers(self, initialization_parameters: dict) -> dict:
         """
         Initialization of headers parameters for login request
+        :param initialization_parameters: dict
         :return: dict
         """
-
-        headers = dict()
-        return headers
+        headers = InitHeaders()
+        return headers.get_headers()
 
     def run_pre_requests(self):
         """

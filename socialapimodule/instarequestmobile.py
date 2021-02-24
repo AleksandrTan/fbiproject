@@ -10,6 +10,7 @@ from settings import requestsmap
 class InstagramRequestsMobile:
 
     def __init__(self, host_proxy: str, port_proxy: int):
+        self.request = requests.Session()
         self.host_proxy = host_proxy
         self.port_proxy = port_proxy
         self.requests_map = requestsmap.INSTAGRAM_MOBILE_DATA
