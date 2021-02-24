@@ -7,16 +7,42 @@ INSTAGRAM_MOBILE_DATA = {
 
     "main_url": "http://127.0.0.1:8000/api/v1/",
 
-    "authorization": {
-        "uri": "authorization/",
-        "data": "",
-        "params": ""
-    },
-
     "login": {
         "uri": "accounts/login/",
         "data": "",
         "params": ""
+    },
+
+    "read_msisdn_header": {
+        "uri": "accounts/read_msisdn_header/"
+    },
+
+    "msisdn_header_bootstrap": {
+        "uri": "accounts/msisdn_header_bootstrap/"
+    },
+
+    "token": {
+        "uri": "zr/token/result/"
+    },
+
+    "contact_point_prefill": {
+        "uri": "accounts/contact_point_prefill/"
+    },
+
+    "launcher_sync": {
+        "uri": "launcher/sync/"
+    },
+
+    "qe_sync": {
+        "uri": "qe/sync/"
+    },
+
+    "log_attribution": {
+        "uri": "attribution/log_attribution/"
+    },
+
+    "get_prefill_candidates": {
+        "uri": "accounts/get_prefill_candidates/"
     },
 
     "like": {

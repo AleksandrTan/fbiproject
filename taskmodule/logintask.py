@@ -23,15 +23,16 @@ class LoginTask:
         :return: dict
         """
         data = dict()
-        print(self.account_data)
+        # run pre-requests
+        # these requests are desirable and in addition,
+        # the request will allow you to get the parameter cookie - csrftoken from the api
+        pre_requests = self.social_api.run_pre_requests()
+
         # initialize request parameters
         initialization_parameters = self.initialization_parameters()
-
+        print(initialization_parameters)
         # initialize request headers
         initialization_headers = self.initialization_headers(initialization_parameters)
-
-        # run pre-requests
-        pre_requests = self.run_pre_requests()
 
         # run login
         # data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
@@ -47,7 +48,7 @@ class LoginTask:
         :return: dict
         """
         params = InitParams()
-        return params.get_params()
+        return params.get_params(self.account_data)
 
     def initialization_headers(self, initialization_parameters: dict) -> dict:
         """
@@ -55,12 +56,5 @@ class LoginTask:
         :param initialization_parameters: dict
         :return: dict
         """
-        headers = InitHeaders()
+        headers = InitHeaders(initialization_parameters)
         return headers.get_headers()
-
-    def run_pre_requests(self):
-        """
-        Run pre requests
-        :return: bool
-        """
-        return True

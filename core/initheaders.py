@@ -1,3 +1,5 @@
+import uuid
+
 from settings import instadata
 
 
@@ -16,3 +18,6 @@ class InitHeaders:
 
     def init_user_agent(self):
         pass
+
+    def generate_uuid(self) -> str:
+        return str(uuid.uuid4())

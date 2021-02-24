@@ -28,39 +28,39 @@ DEVICE_SETTINGS = {
     }
 
 DEFAULT_HEADERS = {
-"X-IG-App-Locale": "en_US",
-            "X-IG-Device-Locale": "en_US",
-            "X-IG-Mapped-Locale": "en_US",
-            "X-Pigeon-Session-Id": self.generate_uuid(),
-            "X-Pigeon-Rawclienttime": str(round(time.time() * 1000) / 1000),
-            "X-IG-Connection-Speed": "-1kbps",
-            "X-IG-Bandwidth-Speed-KBPS": str(random.randint(2900000, 10000000) / 1000),
-            "X-IG-Bandwidth-TotalBytes-B": str(random.randint(5000000, 90000000)),
-            "X-IG-Bandwidth-TotalTime-MS": str(random.randint(5000, 15000)),
-            # "X-IG-EU-DC-ENABLED": "true", # <- type of DC? Eu is euro, but we use US
-            # "X-IG-Prefetch-Request": "foreground",  # OLD from instabot
-            "X-Bloks-Version-Id": hashlib.sha256(
-                json.dumps(self.device_settings).encode()
-            ).hexdigest(),
-            "X-Bloks-Is-Layout-RTL": "false",
-            # "X-Bloks-Enable-RenderCore": "false",  # OLD from instabot
-            # "X-IG-WWW-Claim": "0",  # OLD from instabot
-            "X-MID": self.mid,  # "XkAyKQABAAHizpYQvHzNeBo4E9nm" in instabot
-            "X-IG-Device-ID": self.uuid,
-            "X-IG-Android-ID": self.device_id,
-            "X-IG-Connection-Type": "WIFI",
-            "X-IG-Capabilities": "3brTvwM=",  # "3brTvwE=" in instabot
-            "X-IG-App-ID": "567067343352427",
-            "X-IG-App-Startup-Country": "US",
-            "User-Agent": self.user_agent,
-            "Accept-Language": "en-US",
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "Accept-Encoding": "gzip, deflate",
-            "Host": "i.instagram.com",
-            "X-FB-HTTP-Engine": "Liger",
-            "Connection": "keep-alive",  # "close" in instabot
-            "Pragma": "no-cache",
-            "Cache-Control": "no-cache",
+#             "X-IG-App-Locale": "en_US",
+#             "X-IG-Device-Locale": "en_US",
+#             "X-IG-Mapped-Locale": "en_US",
+#             "X-Pigeon-Session-Id": self.generate_uuid(),
+#             "X-Pigeon-Rawclienttime": str(round(time.time() * 1000) / 1000),
+#             "X-IG-Connection-Speed": "-1kbps",
+#             "X-IG-Bandwidth-Speed-KBPS": str(random.randint(2900000, 10000000) / 1000),
+#             "X-IG-Bandwidth-TotalBytes-B": str(random.randint(5000000, 90000000)),
+#             "X-IG-Bandwidth-TotalTime-MS": str(random.randint(5000, 15000)),
+#             # "X-IG-EU-DC-ENABLED": "true", # <- type of DC? Eu is euro, but we use US
+#             # "X-IG-Prefetch-Request": "foreground",  # OLD from instabot
+#             "X-Bloks-Version-Id": hashlib.sha256(
+#                 json.dumps(self.device_settings).encode()
+#             ).hexdigest(),
+#             "X-Bloks-Is-Layout-RTL": "false",
+#             # "X-Bloks-Enable-RenderCore": "false",  # OLD from instabot
+#             # "X-IG-WWW-Claim": "0",  # OLD from instabot
+#             "X-MID": self.mid,  # "XkAyKQABAAHizpYQvHzNeBo4E9nm" in instabot
+#             "X-IG-Device-ID": self.uuid,
+#             "X-IG-Android-ID": self.device_id,
+#             "X-IG-Connection-Type": "WIFI",
+#             "X-IG-Capabilities": "3brTvwM=",  # "3brTvwE=" in instabot
+#             "X-IG-App-ID": "567067343352427",
+#             "X-IG-App-Startup-Country": "US",
+#             "User-Agent": self.user_agent,
+#             "Accept-Language": "en-US",
+#             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+#             "Accept-Encoding": "gzip, deflate",
+#             "Host": "i.instagram.com",
+#             "X-FB-HTTP-Engine": "Liger",
+#             "Connection": "keep-alive",  # "close" in instabot
+#             "Pragma": "no-cache",
+#             "Cache-Control": "no-cache",
 
 
     'User-Agent': 'this.client.state.appUserAgent',
