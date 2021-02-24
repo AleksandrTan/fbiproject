@@ -1,5 +1,5 @@
 """
-Bot task initialization class
+Bot tasks initialization class
 """
 from socialapimodule.instarequestmobile import InstagramRequestsMobile
 from taskmodule.logintask import LoginTask

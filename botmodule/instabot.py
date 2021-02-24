@@ -6,8 +6,8 @@ a file on the standard output stream.
 """
 import sys
 import time
-from logsource.logconfig import logger
 
+from logsource.logconfig import logger
 from taskmodule.inittask import InitTasks
 from apimodule.systemapiwork import SystemApiRequests
 from socialapimodule.instarequestweb import InstagramRequestsWeb
@@ -39,12 +39,13 @@ class InstaBot:
         self.authorization_data = dict()
         self.tasks = InitTasks(self.host_proxy, self.port_proxy, self.individual_id, self.account_data)
         self.task_objects = self.tasks.get_init_tasks()
+        self.session_parameters = dict()  # account session parameters for a work session
 
     def start(self):
         logger.warning(f"Bot {self.individual_id} start working!!!")
         # log in to the social network
         if self.login_task:
-            data_authorization = self.perform_task(self.task_objects['login'], 0)
+            data_authorization = self._perform_task(self.task_objects['login'], 0)
             if not data_authorization['status']:
                 sys.stdout.write(f"The authorization process for the bot"
                                  f" number {self.individual_id} was not correct.!!!")
@@ -53,12 +54,12 @@ class InstaBot:
             self.authorization_data = data_authorization["authorization_data"]
 
         while self.execution_status:
-            new_task = self.get_new_task()
+            new_task = self._get_new_task()
 
             if new_task["status"]:
                 # run new task
                 sys.stdout.write(f"Task {new_task['task_name']} is running!\n")
-                self.perform_task(self.task_objects[new_task["task_name"]], new_task['task_id'])
+                self._perform_task(self.task_objects[new_task["task_name"]], new_task['task_id'])
                 continue
 
             elif new_task["error"]:
@@ -68,24 +69,24 @@ class InstaBot:
 
             else:
                 sys.stdout.write("No tasks, I work autonomously!\n")
-                self.perform_task(self.task_objects["flipping_tape"], 3)
+                self._perform_task(self.task_objects["flipping_tape"], 3)
                 time.sleep(10)
                 continue
 
-    def perform_task(self, task_object, task_id):
+    def _perform_task(self, task_object, task_id):
         data_task = task_object.run(task_id, self.authorization_data)
         time.sleep(10)
         return data_task
 
-    def get_new_task(self) -> dict:
+    def _get_new_task(self) -> dict:
         new_task = self.system_api.get_new_task()
 
         return new_task
 
-    def send_data_api(self, data):
+    def _send_data_api(self, data):
         logger.warning(f"Bot {data} start working!!!")
 
-    def set_log_record_api(self):
+    def _set_log_record_api(self):
         pass
 
 

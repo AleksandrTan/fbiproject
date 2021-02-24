@@ -4,12 +4,12 @@ A class for making requests to the social network Instagram used mobile API
 import requests
 import json
 from logsource.logconfig import logger
-import requestsmap
+from settings import requestsmap
 
 
 class InstagramRequestsMobile:
 
-    def __init__(self, host_proxy, port_proxy):
+    def __init__(self, host_proxy: str, port_proxy: int):
         self.host_proxy = host_proxy
         self.port_proxy = port_proxy
         self.requests_map = requestsmap.INSTAGRAM_MOBILE_DATA
@@ -51,7 +51,7 @@ class InstagramRequestsMobile:
                                      'AppleWebKit/537.36 (KHTML, like Gecko) '
                                      'Chrome/88.0.4324.150 Safari/537.36'
                        }
-            response = requests.get(main_url + uri, headers=headers)
+            response = requests.post(main_url + uri, params=params, headers=headers)
         except requests.exceptions.ConnectionError as error:
             logger.warning(f"Authorization instagram error - {error}")
             return {"status": False, "error": True, "error_type": error}
@@ -62,6 +62,7 @@ class InstagramRequestsMobile:
         if response.status_code == 200:
             authorization_data = dict()
             data = json.loads(response.text)
+            print(data)
             headers = response.headers
 
             if headers['csrftoken']:
@@ -84,18 +85,19 @@ class InstagramRequestsMobile:
 
         return response
 
-    def login(self, account_data: dict, params: dict) -> dict:
+    def login(self, account_data: dict, initialization_parameters: dict, initialization_headers: dict) -> dict:
         """
+        :param initialization_headers: dict
         :param account_data: dict
-        :param params: dict
+        :param initialization_parameters: dict
         :return: dict
         """
-        authorization_data = self.authorization(params)
+        authorization_data = self.authorization(initialization_parameters)
         print('Auth data', authorization_data)
         if authorization_data['status']:
             user_data = dict()
-            user_data['username'] = params['username']
-            user_data['password'] = params['password']
+            user_data['username'] = initialization_parameters['username']
+            user_data['password'] = initialization_parameters['password']
             user_data['queryParams'] = {}
             user_data['optIntoOneTap'] = False
             response = self.make_request(self.requests_map["main_url"], self.requests_map["login"]["uri"],

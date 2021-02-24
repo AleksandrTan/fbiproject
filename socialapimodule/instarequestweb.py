@@ -5,7 +5,7 @@ import requests
 import json
 from logsource.logconfig import logger
 from interfaces.apisocialinter import BaseSocialRequests
-import requestsmap
+from settings import requestsmap
 
 
 class InstagramRequestsWeb(BaseSocialRequests):
