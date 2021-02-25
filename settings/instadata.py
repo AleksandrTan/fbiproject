@@ -28,16 +28,6 @@ DEVICE_SETTINGS = {
     }
 
 DEFAULT_HEADERS = {
-    'User-Agent': 'this.client.state.appUserAgent',
-    'X-Ads-Opt-Out': "this.client.state.adsOptOut ? '1' : '0',",
-
-    'X-IG-Extended-CDN-Thumbnail-Cache-Busting-Value': "this.client.state.thumbnailCacheBustingValue.toString()",
-
-    'X-MID': "this.client.state.extractCookie('mid')?.value",
-
-    'X-IG-Device-ID': "this.client.state.uuid",
-    'X-IG-Android-ID': "this.client.state.deviceId",
-
     'Accept-Language': "en_US",
     'X-FB-HTTP-Engine': 'Liger',
     'Host': 'i.instagram.com',
@@ -48,10 +38,6 @@ DEFAULT_HEADERS = {
     "X-Bloks-Is-Layout-RTL": "false",
     "X-IG-Connection-Type": "WIFI",
     "X-IG-Capabilities": "3brTvwM=",
-
-
-    'Authorization': "this.client.state.authorization",
-
     'Connection': 'close',
 }
 
@@ -60,6 +46,11 @@ FACEBOOK_ANALYTICS_APPLICATION_ID = '567067343352427'
 APP_VERSION = '121.0.0.29.119'
 LANGUAGE = "en_US"
 APP_VERSION_CODE = '185203708'
+
+# username: someusername
+# enc_password: #PWD_INSTAGRAM_BROWSER:10:1592421027:ARpQAAm7pp/etjy2dMjVtPRdJFRPu8FAGILBRyupINxLckJ3QO0u0RLmU5NaONYK2G0jQt+78BBDBxR9nrUsufbZgR02YvR8BLcHS4uN8Gu88O2Z2mQU9AH3C0Z2NpDPpS22uqUYhxDKcYS5cA==
+# queryParams: {"oneTapUsers":"[\"36990119985\"]"}
+# optIntoOneTap: false
 
 # export const SIGNATURE_KEY = '9193488027538fd3450b83b7d05286d4ca9599a0f7eeed90d8c85925698a05dc';
 # export const BREADCRUMB_KEY = 'iN4$aGr0m';

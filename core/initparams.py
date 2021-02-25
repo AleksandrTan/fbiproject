@@ -17,7 +17,7 @@ class InitParams:
         self.password = self.account_data["password"]
         self.phone_id = self.generate_uuid()
         self.enc_password = ''
-        self._csrftoken = ''
+        self.csrftoken = ''
         self.mid = ''
         self.ig_did = ''
         self.adid = ''
@@ -30,6 +30,9 @@ class InitParams:
         self.advertising_id = self.generate_uuid()
         self.device_id = self.generate_device_id()
         self.build_device = self.generate_build_device()
+
+    def __setattr__(self, key, value):
+        super().__setattr__(key, value)
 
     def generate_uuid(self) -> str:
         return str(uuid.uuid4())

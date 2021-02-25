@@ -15,7 +15,7 @@ class InitHeaders:
         self.make_headers()
 
     def get_headers(self) -> dict:
-        print(type(self.initialization_headers["X-IG-Device-ID"]))
+
         return self.initialization_headers
 
     def make_headers(self):
@@ -56,3 +56,6 @@ class InitHeaders:
 
     def generate_uuid(self) -> str:
         return str(uuid.uuid4())
+
+    def set_attribute_headers(self, key, value):
+        self.initialization_headers[key] = value

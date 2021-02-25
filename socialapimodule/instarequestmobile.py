@@ -15,19 +15,15 @@ class InstagramRequestsMobile:
         self.port_proxy = port_proxy
         self.requests_map = requestsmap.INSTAGRAM_MOBILE_DATA
 
-    def make_request(self, main_url: str, uri: str, params: dict, authorization_data: dict) -> dict:
+    def make_request_post(self, main_url: str, uri: str, params: dict, headers: dict) -> dict:
         """
-        :param authorization_data: dict
+        :param headers:
         :param main_url: str
         :param uri: str
         :param params: dict
         :return: dict
         """
         try:
-            headers = {'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) '
-                                     'AppleWebKit/537.36 (KHTML, like Gecko) '
-                                     'Chrome/88.0.4324.150 Safari/537.36',
-                       }
             response = self.request.post(main_url + uri, data=params, headers=headers)
         except requests.exceptions.ConnectionError as error:
             logger.warning(f"{error}")
@@ -36,7 +32,7 @@ class InstagramRequestsMobile:
         if response.status_code == 200:
             data = json.loads(response.text)
             if data["status"]:
-                return {"status": data["status"]}
+                return {"status": data["status"], "data": data}
         logger.warning(f"Error response code - {response.status_code}")
         return {"status": False, "error": True, "error_type": response.status_code}
 
@@ -55,8 +51,8 @@ class InstagramRequestsMobile:
             user_data['password'] = initialization_parameters['password']
             user_data['queryParams'] = {}
             user_data['optIntoOneTap'] = False
-            response = self.make_request(self.requests_map["main_url"], self.requests_map["login"]["uri"],
-                                         user_data, authorization_data['authorization_data'])
+            response = self.make_request_post(self.requests_map["main_url"], self.requests_map["login"]["uri"],
+                                              user_data, authorization_data['authorization_data'])
 
             if response["status"]:
                 if response["response_data"]["status"] == 'ok' and response["response_data"]['authenticated'] == 'true':
@@ -71,8 +67,8 @@ class InstagramRequestsMobile:
         :param params: dict
         :return: dict
         """
-        response = self.make_request(self.requests_map["main_url"], self.requests_map["like"]["uri"], params,
-                                     authorization_data)
+        response = self.make_request_post(self.requests_map["main_url"], self.requests_map["like"]["uri"], params,
+                                          authorization_data)
         print(4000, authorization_data)
         return response
 
@@ -82,8 +78,9 @@ class InstagramRequestsMobile:
         :param params: dict
         :return: dict
         """
-        response = self.make_request(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"], params,
-                                     authorization_data)
+        response = self.make_request_post(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"],
+                                          params,
+                                          authorization_data)
         print(4000, authorization_data)
         return response
 
@@ -93,72 +90,63 @@ class InstagramRequestsMobile:
         :param params: dict
         :return: dict
         """
-        response = self.make_request(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params,
-                                     authorization_data)
+        response = self.make_request_post(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params,
+                                          authorization_data)
         print(4000, authorization_data)
         return response
 
-    def run_pre_requests(self, params: object):
+    def run_pre_requests(self, params: object) -> bool:
         """
         Emulation mobile app behaivor before login
         Run pre requests
         :return: bool
         """
-
-        # /api/v1/accounts/get_prefill_candidates
-        self.get_prefill_candidates(True)
-        # /api/v1/qe/sync (server_config_retrieval)
-        self.sync_device_features(True)
-        # /api/v1/launcher/sync/ (server_config_retrieval)
-        self.sync_launcher(True)
-        # /api/v1/accounts/contact_point_prefill/
-        self.set_contact_point_prefill("prefill")
+        self.read_msisdn_header(params)
+        self.msisdn_header_bootstrap()
+        self.token_result()
+        self.contact_point_prefill()
+        self.pre_login_sync()
+        self.sync_login_experiments()
+        self.log_attribution()
+        self.get_prefill_candidates()
 
         return True
 
-    def get_prefill_candidates(self, login: bool = False) -> dict:
-        # "android_device_id":"android-f14b9731e4869eb",
-        # "phone_id":"b4bd7978-ca2b-4ea0-a728-deb4180bd6ca",
-        # "usages":"[\"account_recovery_omnibox\"]",
-        # "_csrftoken":"9LZXBXXOztxNmg3h1r4gNzX5ohoOeBkI",
-        # "device_id":"70db6a72-2663-48da-96f5-123edff1d458"
-        data = {
-            "android_device_id": self.device_id,
-            "phone_id": self.phone_id,
-            "usages": '["account_recovery_omnibox"]',
-            "device_id": self.device_id,
-        }
-        if login is False:
-            data["_csrftoken"] = self.token
-        return self.private_request(
-            "accounts/get_prefill_candidates/", data, login=login
-        )
+    def read_msisdn_header(self, params: object):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["read_msisdn_header"]["uri"]
+        headers = {'X-DEVICE-ID': params.uuid}
+        data = {"mobile_subno_usage": "default", "device_id": params.uuid}
+        result = self.make_request_post(url, uri, data, headers)
 
-    def sync_device_features(self, login: bool = False) -> dict:
-        data = {
-            "id": self.uuid,
-            "server_config_retrieval": "1",
-            "experiments": "config.LOGIN_EXPERIMENTS",
-        }
-        if login is False:
-            data["_uuid"] = self.uuid
-            data["_uid"] = self.user_id
-            data["_csrftoken"] = self.token
-        return self.private_request(
-            "qe/sync/", data, login=login, headers={"X-DEVICE-ID": self.uuid}
-        )
+        params.csrftoken = self.request.cookies.get_dict().get("csrftoken", '')
+        params.mid = self.request.cookies.get_dict().get("mid", '')
+        params.ig_did = self.request.cookies.get_dict().get("ig_did", '')
 
-    def sync_launcher(self, login: bool = False) -> dict:
-        data = {
-            "id": self.uuid,
-            "server_config_retrieval": "1",
-        }
-        if login is False:
-            data["_uid"] = self.user_id
-            data["_uuid"] = self.uuid
-            data["_csrftoken"] = self.token
-        return self.private_request("launcher/sync/", data, login=login)
+        if result["status"]:
+            return True
 
-    def set_contact_point_prefill(self, usage: str = "prefill") -> dict:
-        data = {"phone_id": self.phone_id, "usage": usage}
-        return self.private_request("accounts/contact_point_prefill/", data, login=True)
+        return False
+
+    def msisdn_header_bootstrap(self):
+        print(self.request.cookies)
+
+        pass
+
+    def token_result(self):
+        pass
+
+    def contact_point_prefill(self):
+        pass
+
+    def pre_login_sync(self):
+        pass
+
+    def sync_login_experiments(self):
+        pass
+
+    def log_attribution(self):
+        pass
+
+    def get_prefill_candidates(self):
+        pass
