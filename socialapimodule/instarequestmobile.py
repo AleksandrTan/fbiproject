@@ -119,9 +119,10 @@ class InstagramRequestsMobile:
         data = {"mobile_subno_usage": "default", "device_id": params.uuid}
         result = self.make_request_post(url, uri, data, headers)
 
-        params.csrftoken = self.request.cookies.get_dict().get("csrftoken", '')
-        params.mid = self.request.cookies.get_dict().get("mid", '')
-        params.ig_did = self.request.cookies.get_dict().get("ig_did", '')
+        if not params.csrftoken:
+            params.csrftoken = self.request.cookies.get_dict().get("csrftoken", '')
+            params.mid = self.request.cookies.get_dict().get("mid", '')
+            params.ig_did = self.request.cookies.get_dict().get("ig_did", '')
 
         if result["status"]:
             return True

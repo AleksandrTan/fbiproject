@@ -9,7 +9,15 @@ from settings.devices import DEVICES
 
 class InitParams:
 
-    def __init__(self, account_data: dict):
+    def __init__(self, account_data: dict, initialization_parameters: dict):
+        if initialization_parameters:
+            self.csrftoken = initialization_parameters["csrftoken"]
+            self.mid = initialization_parameters["mid"]
+            self.ig_did = initialization_parameters["id_did"]
+        else:
+            self.csrftoken = ''
+            self.mid = ''
+            self.ig_did = ''
         self.account_data = account_data
         self.initialization_parameters = dict()
         self.device_settings = instadata.DEVICE_SETTINGS
@@ -17,9 +25,6 @@ class InitParams:
         self.password = self.account_data["password"]
         self.phone_id = self.generate_uuid()
         self.enc_password = ''
-        self.csrftoken = ''
-        self.mid = ''
-        self.ig_did = ''
         self.adid = ''
         self.google_tokens = '[]'
         self.login_attempt_count = 0

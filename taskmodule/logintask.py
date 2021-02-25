@@ -10,29 +10,34 @@ from core.initparams import InitParams
 
 
 class LoginTask:
+    """
+    The first request to the api of instagram. If parameters csrftoken, mid, ig_did are passed,
+    initialize InitParams with existing ones, if not,
+    after pre-requests, transfer them to the system api server.
+    """
 
     def __init__(self, social_api, account_data: dict, individual_bot_id: int):
         self.social_api = social_api
         self.account_data = account_data
         self.individual_id = individual_bot_id
 
-    def run(self, task_id: int, authorization_data: dict) -> dict:
+    def run(self, task_id: int, initialization_parameters: dict) -> dict:
         """
         Run task
-        :param authorization_data: dict
+        :param initialization_parameters:
         :param task_id: int
         :return: dict
         """
         data = dict()
-        # initialize request parameters
-        initialization_parameters = self.initialization_parameters()
+        initialization_parameters = self.initialization_parameters(initialization_parameters)
+        print(initialization_parameters.mid)
 
         # run pre-requests
         # these requests are desirable and in addition,
         # the request will allow you to get the parameter cookie - csrftoken from the api
-        print(initialization_parameters.csrftoken, 3500)
         pre_requests = self.social_api.run_pre_requests(initialization_parameters)
-        print(initialization_parameters.csrftoken)
+        print(initialization_parameters.mid)
+
         # initialize request headers
         initialization_headers = self.initialization_headers(initialization_parameters)
 
@@ -44,12 +49,12 @@ class LoginTask:
 
         return data
 
-    def initialization_parameters(self) -> object:
+    def initialization_parameters(self, initialization_parameters: dict) -> object:
         """
         Initialization of account parameters for login request
         :return: dict
         """
-        params = InitParams(self.account_data)
+        params = InitParams(self.account_data, initialization_parameters)
         return params
 
     def initialization_headers(self, initialization_parameters: object) -> dict:
