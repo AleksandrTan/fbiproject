@@ -31,7 +31,7 @@ class InstaBot:
         """
         self.initialization_parameters = initialization_parameters
         self.individual_id = individual_id
-        self.execution_status = True  # a flag that determines the state of the bot running shutdown
+        self.execution_status = False  # a flag that determines the state of the bot running shutdown
         self.login_task = login_task
         self.account_data = account_data
         self.host_proxy = host_proxy

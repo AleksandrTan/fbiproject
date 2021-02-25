@@ -32,14 +32,14 @@ class LoginTask:
         initialization_parameters = self.initialization_parameters(initialization_parameters)
         print(initialization_parameters.mid)
 
+        # initialize request headers
+        initialization_headers = self.initialization_headers(initialization_parameters)
+
         # run pre-requests
         # these requests are desirable and in addition,
         # the request will allow you to get the parameter cookie - csrftoken from the api
-        pre_requests = self.social_api.run_pre_requests(initialization_parameters)
+        pre_requests = self.social_api.run_pre_requests(initialization_parameters, initialization_headers)
         print(initialization_parameters.mid)
-
-        # initialize request headers
-        initialization_headers = self.initialization_headers(initialization_parameters)
 
         # run login
         # data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)

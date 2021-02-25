@@ -24,13 +24,16 @@ class InstagramRequestsMobile:
         :return: dict
         """
         try:
+            print(main_url + uri, params, headers)
+
             response = self.request.post(main_url + uri, data=params, headers=headers)
         except requests.exceptions.ConnectionError as error:
             logger.warning(f"{error}")
             return {"status": False, "error": True, "error_type": error}
-
+        print(response.status_code)
         if response.status_code == 200:
             data = json.loads(response.text)
+            print(data)
             if data["status"]:
                 return {"status": data["status"], "data": data}
         logger.warning(f"Error response code - {response.status_code}")
@@ -95,13 +98,13 @@ class InstagramRequestsMobile:
         print(4000, authorization_data)
         return response
 
-    def run_pre_requests(self, params: object) -> bool:
+    def run_pre_requests(self, params: object, headers: dict) -> bool:
         """
         Emulation mobile app behaivor before login
         Run pre requests
         :return: bool
         """
-        self.read_msisdn_header(params)
+        self.read_msisdn_header(params, headers)
         self.msisdn_header_bootstrap()
         self.token_result()
         self.contact_point_prefill()
@@ -112,10 +115,10 @@ class InstagramRequestsMobile:
 
         return True
 
-    def read_msisdn_header(self, params: object):
+    def read_msisdn_header(self, params: object, headers: dict):
         url = self.requests_map["main_url"]
         uri = self.requests_map["read_msisdn_header"]["uri"]
-        headers = {'X-DEVICE-ID': params.uuid}
+        headers = {'X-DEVICE-ID': headers["X-IG-Device-ID"], "User-Agent": headers["User-Agent"]}
         data = {"mobile_subno_usage": "default", "device_id": params.uuid}
         result = self.make_request_post(url, uri, data, headers)
 
