@@ -10,7 +10,7 @@ import time
 from logsource.logconfig import logger
 from taskmodule.inittask import InitTasks
 from apimodule.systemapiwork import SystemApiRequests
-from socialapimodule.instarequestweb import InstagramRequestsWeb
+from socialapimodule.instarequestmobile import InstagramRequestsMobile
 
 
 class InstaBot:
@@ -91,6 +91,7 @@ class InstaBot:
 
 
 if __name__ == "__main__":
-    bot = InstaBot("http://localhost", 3500, InstagramRequestsWeb("http://localhost", 8000),
+    bot = InstaBot("http://localhost", 3500, InstagramRequestsMobile("http://localhost", 8000),
                    SystemApiRequests(1), 1, {"username": "rumych2013@gmail.com", "password": 1234567})
+
     bot.start()

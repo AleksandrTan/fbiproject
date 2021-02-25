@@ -28,76 +28,39 @@ DEVICE_SETTINGS = {
     }
 
 DEFAULT_HEADERS = {
-#             "X-IG-App-Locale": "en_US",
-#             "X-IG-Device-Locale": "en_US",
-#             "X-IG-Mapped-Locale": "en_US",
-#             "X-Pigeon-Session-Id": self.generate_uuid(),
-#             "X-Pigeon-Rawclienttime": str(round(time.time() * 1000) / 1000),
-#             "X-IG-Connection-Speed": "-1kbps",
-#             "X-IG-Bandwidth-Speed-KBPS": str(random.randint(2900000, 10000000) / 1000),
-#             "X-IG-Bandwidth-TotalBytes-B": str(random.randint(5000000, 90000000)),
-#             "X-IG-Bandwidth-TotalTime-MS": str(random.randint(5000, 15000)),
-#             # "X-IG-EU-DC-ENABLED": "true", # <- type of DC? Eu is euro, but we use US
-#             # "X-IG-Prefetch-Request": "foreground",  # OLD from instabot
-#             "X-Bloks-Version-Id": hashlib.sha256(
-#                 json.dumps(self.device_settings).encode()
-#             ).hexdigest(),
-#             "X-Bloks-Is-Layout-RTL": "false",
-#             # "X-Bloks-Enable-RenderCore": "false",  # OLD from instabot
-#             # "X-IG-WWW-Claim": "0",  # OLD from instabot
-#             "X-MID": self.mid,  # "XkAyKQABAAHizpYQvHzNeBo4E9nm" in instabot
-#             "X-IG-Device-ID": self.uuid,
-#             "X-IG-Android-ID": self.device_id,
-#             "X-IG-Connection-Type": "WIFI",
-#             "X-IG-Capabilities": "3brTvwM=",  # "3brTvwE=" in instabot
-#             "X-IG-App-ID": "567067343352427",
-#             "X-IG-App-Startup-Country": "US",
-#             "User-Agent": self.user_agent,
-#             "Accept-Language": "en-US",
-#             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-#             "Accept-Encoding": "gzip, deflate",
-#             "Host": "i.instagram.com",
-#             "X-FB-HTTP-Engine": "Liger",
-#             "Connection": "keep-alive",  # "close" in instabot
-#             "Pragma": "no-cache",
-#             "Cache-Control": "no-cache",
-
-
     'User-Agent': 'this.client.state.appUserAgent',
     'X-Ads-Opt-Out': "this.client.state.adsOptOut ? '1' : '0',",
-    # needed? 'X-DEVICE-ID': this.client.state.uuid,
-    'X-CM-Bandwidth-KBPS': "-1.000",
-    'X-CM-Latency': "-1.000",
-    'X-IG-App-Locale': 'this.client.state.language',
-    'X-IG-Device-Locale': 'this.client.state.language',
-    'X-Pigeon-Session-Id': 'this.client.state.pigeonSessionId',
-    'X-Pigeon-Rawclienttime': '(Date.now() / 1000).toFixed(3)',
-    'X-IG-Connection-Speed': "${random(1000, 3700)}kbps",
-    'X-IG-Bandwidth-Speed-KBPS': '-1.000',
-    'X-IG-Bandwidth-TotalBytes-B': '0',
-    'X-IG-Bandwidth-TotalTime-MS': '0',
-    'X-IG-EU-DC-ENABLED':
-        "typeof this.client.state.euDCEnabled === 'undefined' ? void 0 : this.client.state.euDCEnabled.toString()",
+
     'X-IG-Extended-CDN-Thumbnail-Cache-Busting-Value': "this.client.state.thumbnailCacheBustingValue.toString()",
-    'X-Bloks-Version-Id': "this.client.state.bloksVersionId",
+
     'X-MID': "this.client.state.extractCookie('mid')?.value",
-    'X-IG-WWW-Claim': "this.client.state.igWWWClaim || '0'",
-    'X-Bloks-Is-Layout-RTL': "this.client.state.isLayoutRTL.toString()",
-    'X-IG-Connection-Type': "this.client.state.connectionTypeHeader",
-    'X-IG-Capabilities': "this.client.state.capabilitiesHeader",
-    'X-IG-App-ID': "this.client.state.fbAnalyticsApplicationId",
+
     'X-IG-Device-ID': "this.client.state.uuid",
     'X-IG-Android-ID': "this.client.state.deviceId",
-    'Accept-Language': "this.client.state.language.replace('_', '-')",
+
+    'Accept-Language': "en_US",
     'X-FB-HTTP-Engine': 'Liger',
-    'Authorization': "this.client.state.authorization",
     'Host': 'i.instagram.com',
     'Accept-Encoding': 'gzip',
+    'X-IG-App-Locale': "en_US",
+    'X-IG-Device-Locale': "en_US",
+    'X-IG-Mapped-Locale': "en_US",
+    "X-Bloks-Is-Layout-RTL": "false",
+    "X-IG-Connection-Type": "WIFI",
+    "X-IG-Capabilities": "3brTvwM=",
+
+
+    'Authorization': "this.client.state.authorization",
+
     'Connection': 'close',
 }
 
-# export const APP_VERSION = '121.0.0.29.119';
-# export const APP_VERSION_CODE = '185203708';
+BLOKS_VERSION_ID = '1b030ce63a06c25f3e4de6aaaf6802fe1e76401bc5ab6e5fb85ed6c2d333e0c7'
+FACEBOOK_ANALYTICS_APPLICATION_ID = '567067343352427'
+APP_VERSION = '121.0.0.29.119'
+LANGUAGE = "en_US"
+APP_VERSION_CODE = '185203708'
+
 # export const SIGNATURE_KEY = '9193488027538fd3450b83b7d05286d4ca9599a0f7eeed90d8c85925698a05dc';
 # export const BREADCRUMB_KEY = 'iN4$aGr0m';
 # export const SIGNATURE_VERSION = '4';
@@ -109,10 +72,4 @@ DEFAULT_HEADERS = {
 # export const FACEBOOK_OTA_FIELDS =
 #   'update%7Bdownload_uri%2Cdownload_uri_delta_base%2Cversion_code_delta_base%2Cdownload_uri_delta%2Cfallback_to_full_update%2Cfile_size_delta%2Cversion_code%2Cpublished_date%2Cfile_size%2Cota_bundle_type%2Cresources_checksum%2Callowed_networks%2Crelease_id%7D';
 # export const FACEBOOK_ORCA_APPLICATION_ID = '124024574287414';
-#
-# export const BLOKS_VERSION_ID = '1b030ce63a06c25f3e4de6aaaf6802fe1e76401bc5ab6e5fb85ed6c2d333e0c7';
-#
-# export const HOSTNAME = 'i.instagram.com';
-# export const WEB_HOSTNAME = 'www.instagram.com';
-# export const HOST = `https://${HOSTNAME}/`;
-# export const WEBHOST = `https://${WEB_HOSTNAME}/`;
+

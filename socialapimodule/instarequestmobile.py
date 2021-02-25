@@ -98,13 +98,13 @@ class InstagramRequestsMobile:
         print(4000, authorization_data)
         return response
 
-    def run_pre_requests(self):
+    def run_pre_requests(self, params: object):
         """
+        Emulation mobile app behaivor before login
         Run pre requests
         :return: bool
         """
-        """Emulation mobile app behaivor before login
-                """
+
         # /api/v1/accounts/get_prefill_candidates
         self.get_prefill_candidates(True)
         # /api/v1/qe/sync (server_config_retrieval)

@@ -8,37 +8,28 @@ from settings.devices import DEVICES
 
 
 class InitParams:
-    def __init__(self):
-        self.uuids = dict()
-        self.device_settings = dict()
+
+    def __init__(self, account_data: dict):
+        self.account_data = account_data
         self.initialization_parameters = dict()
-
-    def get_params(self, account_data: dict) -> dict:
-        self.initialization_parameters["uuids"] = self.set_uuids(account_data)
-        self.initialization_parameters["device_settings"] = instadata.DEVICE_SETTINGS
-
-        return self.initialization_parameters
-
-    def set_uuids(self, account_data):
-        self.uuids["username"] = account_data["username"]
-        self.uuids["password"] = account_data["password"]
-        self.uuids["phone_id"] = self.generate_uuid()
-        self.uuids["enc_password"] = ''
-        self.uuids["_csrftoken"] = ''
-        self.uuids["mid"] = ''
-        self.uuids["ig_did"] = ''
-        self.uuids["adid"] = ''
-        self.uuids["google_tokens"] = '[]'
-        self.uuids["login_attempt_count"] = 0
-        self.uuids["country_codes"] = json.dumps({"country_code": '1', "source": 'default'})
-        self.uuids["jazoest"] = self.generate_jazoest(self.uuids["phone_id"])
-        self.uuids["uuid"] = self.generate_uuid()
-        self.uuids["client_session_id"] = self.generate_uuid()
-        self.uuids["advertising_id"] = self.generate_uuid()
-        self.uuids["device_id"] = self.generate_device_id()
-        self.uuids["build_device"] = self.generate_build_device()
-
-        return self.uuids
+        self.device_settings = instadata.DEVICE_SETTINGS
+        self.username = self.account_data["username"]
+        self.password = self.account_data["password"]
+        self.phone_id = self.generate_uuid()
+        self.enc_password = ''
+        self._csrftoken = ''
+        self.mid = ''
+        self.ig_did = ''
+        self.adid = ''
+        self.google_tokens = '[]'
+        self.login_attempt_count = 0
+        self.country_codes = json.dumps({"country_code": '1', "source": 'default'})
+        self.jazoest = self.generate_jazoest(self.phone_id)
+        self.uuid = self.generate_uuid()
+        self.client_session_id = self.generate_uuid()
+        self.advertising_id = self.generate_uuid()
+        self.device_id = self.generate_device_id()
+        self.build_device = self.generate_build_device()
 
     def generate_uuid(self) -> str:
         return str(uuid.uuid4())

@@ -3,7 +3,8 @@ Performs the task of implementing a login on a social network
 Parameters and headers are pre-initialized. Prerequisites for initializing the device
 and the login request itself are performed.
 """
-from apimodule.systemapiwork import SystemApiRequests
+from pprint import pprint
+
 from core.initheaders import InitHeaders
 from core.initparams import InitParams
 
@@ -23,16 +24,17 @@ class LoginTask:
         :return: dict
         """
         data = dict()
+        # initialize request parameters
+        initialization_parameters = self.initialization_parameters()
+        pprint(dir(initialization_parameters))
+
+        # initialize request headers
+        initialization_headers = self.initialization_headers(initialization_parameters)
+        pprint(initialization_headers)
         # run pre-requests
         # these requests are desirable and in addition,
         # the request will allow you to get the parameter cookie - csrftoken from the api
-        pre_requests = self.social_api.run_pre_requests()
-
-        # initialize request parameters
-        initialization_parameters = self.initialization_parameters()
-        print(initialization_parameters)
-        # initialize request headers
-        initialization_headers = self.initialization_headers(initialization_parameters)
+        # pre_requests = self.social_api.run_pre_requests(initialization_parameters)
 
         # run login
         # data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
@@ -42,15 +44,15 @@ class LoginTask:
 
         return data
 
-    def initialization_parameters(self) -> dict:
+    def initialization_parameters(self) -> object:
         """
         Initialization of account parameters for login request
         :return: dict
         """
-        params = InitParams()
-        return params.get_params(self.account_data)
+        params = InitParams(self.account_data)
+        return params
 
-    def initialization_headers(self, initialization_parameters: dict) -> dict:
+    def initialization_headers(self, initialization_parameters: object) -> dict:
         """
         Initialization of headers parameters for login request
         :param initialization_parameters: dict
