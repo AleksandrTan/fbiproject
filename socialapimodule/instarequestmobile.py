@@ -5,6 +5,7 @@ import requests
 import json
 from logsource.logconfig import logger
 from settings import requestsmap
+from settings import instadata
 
 
 class InstagramRequestsMobile:
@@ -32,7 +33,7 @@ class InstagramRequestsMobile:
         print(response.status_code)
         if response.status_code == 200:
             data = json.loads(response.text)
-            if data["status"]:
+            if data["status"] == 'ok':
                 return {"status": data["status"], "data": data}
         logger.warning(f"Error response code - {response.status_code}")
         return {"status": False, "error": True, "error_type": response.status_code}
@@ -102,16 +103,14 @@ class InstagramRequestsMobile:
         Run pre requests
         :return: bool
         """
-        print(headers.get_headers())
         self.read_msisdn_header(params, headers, headers_dict)
-        self.msisdn_header_bootstrap()
-        self.token_result()
-        self.contact_point_prefill()
-        self.pre_login_sync()
-        self.sync_login_experiments()
-        self.log_attribution()
-        self.get_prefill_candidates()
-        print(headers.get_headers())
+        self.msisdn_header_bootstrap(params, headers_dict)
+        self.token_result(params, headers_dict)
+        self.contact_point_prefill(params, headers_dict)
+        self.pre_login_sync(params, headers_dict)
+        self.sync_login_experiments(params, headers_dict)
+        self.log_attribution(params, headers_dict)
+        self.get_prefill_candidates(params, headers_dict)
 
         return True
 
@@ -133,28 +132,112 @@ class InstagramRequestsMobile:
             params.ig_did = self.request.cookies.get_dict().get("ig_did", '')
             headers_data.set_attribute_headers("X-MID", params.mid)
 
-        if result["status"]:
+        if result["status"] == 'ok':
             return True
 
         return False
 
-    def msisdn_header_bootstrap(self):
+    def msisdn_header_bootstrap(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["msisdn_header_bootstrap"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {"mobile_subno_usage": "default",
+                "device_id": params.uuid}
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"] == 'ok':
+            return True
+
+        return False
+
+    def token_result(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["token"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {
+            "token_hash": "",
+            "device_id": params.device_id,
+            "custom_device_id": params.uuid,
+            "fetch_reason": 'token_expired'
+        }
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"] == 'ok':
+            return True
+
+        return False
+
+    def contact_point_prefill(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["contact_point_prefill"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {"mobile_subno_usage": "default",
+                "device_id": params.uuid}
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"] == 'ok':
+            return True
+
+        return False
+
+    def pre_login_sync(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["launcher_sync"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {
+            "id": params.uuid,
+            "configs": instadata.PRE_LOGIN_STRING}
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"] == 'ok':
+            return True
+
+        return False
+
+    def sync_login_experiments(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["qe_sync"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        try:
+            data = {
+                "_csrftoken": params.csrftoken,
+                "id": self.request.cookies["ds_user_id"],
+                "_uid": self.request.cookies["ds_user_id"],
+                "_uuid": params.uuid
+            }
+        except KeyError as error:
+            data = {
+                "id": params.uuid,
+            }
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"] == 'ok':
+            return True
+
+        return False
+
+    def log_attribution(self, params: object, headers_dict: dict):
         pass
 
-    def token_result(self):
-        pass
-
-    def contact_point_prefill(self):
-        pass
-
-    def pre_login_sync(self):
-        pass
-
-    def sync_login_experiments(self):
-        pass
-
-    def log_attribution(self):
-        pass
-
-    def get_prefill_candidates(self):
+    def get_prefill_candidates(self, params: object, headers_dict: dict):
         pass
