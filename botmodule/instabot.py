@@ -58,7 +58,7 @@ class InstaBot:
             else:
                 self.initialization_parameters = data_authorization["initialization_parameters"]
                 self.initialization_headers = data_authorization["initialization_headers"]
-                print(True)
+
                 return
 
         while self.execution_status:

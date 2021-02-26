@@ -3,8 +3,9 @@ Performs the task of implementing a login on a social network
 Parameters and headers are pre-initialized. Prerequisites for initializing the device
 and the login request itself are performed.
 """
+import sys
 from pprint import pprint
-
+from logsource.logconfig import logger
 from core.initheaders import InitHeaders
 from core.initparams import InitParams
 
@@ -12,7 +13,7 @@ from core.initparams import InitParams
 class LoginTask:
     """
     The first request to the api of instagram. If parameters csrftoken, mid, ig_did are passed,
-    initialize InitParams with existing ones, if not,
+    initialize InitParams, InitHeaders with existing ones, if not,
     after pre-requests, transfer them to the system api server.
     """
 
@@ -41,6 +42,11 @@ class LoginTask:
                                                         initialization_headers.get_headers())
 
         if not pre_requests:
+            sys.stdout.write(f"The parameters necessary for the further operation of the bot {self.individual_id} "
+                             f"were not received.!!!")
+            logger.warning(f"The parameters necessary for the further operation of the bot {self.individual_id} "
+                           f"were not received.")
+
             return {"status": False}
 
         # check if params csrftoken, mid, ig_did are passed
