@@ -15,7 +15,6 @@ class InitHeaders:
         self.make_headers()
 
     def get_headers(self) -> dict:
-
         return self.initialization_headers
 
     def make_headers(self):
@@ -45,7 +44,7 @@ class InitHeaders:
         self.initialization_headers['X-IG-App-ID'] = instadata.FACEBOOK_ANALYTICS_APPLICATION_ID
 
     def init_user_agent(self):
-        return f"Instagram {instadata.APP_VERSION} Android {self.generate_build_device()}; {instadata.LANGUAGE };" \
+        return f"Instagram {instadata.APP_VERSION} Android {self.generate_build_device()}; {instadata.LANGUAGE};" \
                f" {instadata.APP_VERSION_CODE} "
 
     def generate_build_device(self):
