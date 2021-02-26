@@ -30,6 +30,7 @@ class InstaBot:
         :param initialization_parameters: dict
         """
         self.initialization_parameters = initialization_parameters
+        self.initialization_headers = ''
         self.individual_id = individual_id
         self.execution_status = False  # a flag that determines the state of the bot running shutdown
         self.login_task = login_task
@@ -47,10 +48,17 @@ class InstaBot:
         # log in to the social network
         if self.login_task:
             data_authorization = self._perform_task(self.task_objects['login'], 0, self.initialization_parameters)
+
             if not data_authorization['status']:
                 sys.stdout.write(f"The authorization process for the bot"
                                  f" number {self.individual_id} was not correct.!!!")
                 logger.warning(f"The authorization process for the bot number {self.individual_id} was not correct.!!!")
+
+                return False
+            else:
+                self.initialization_parameters = data_authorization["initialization_parameters"]
+                self.initialization_headers = data_authorization["initialization_headers"]
+                print(True)
                 return
 
         while self.execution_status:
@@ -70,12 +78,12 @@ class InstaBot:
             else:
                 sys.stdout.write("No tasks, I work autonomously!\n")
                 self._perform_task(self.task_objects["flipping_tape"], 3)
-                time.sleep(10)
+                time.sleep(2)
                 continue
 
     def _perform_task(self, task_object, task_id, initialization_parameters: dict = None):
         data_task = task_object.run(task_id, initialization_parameters)
-        time.sleep(10)
+        time.sleep(2)
         return data_task
 
     def _get_new_task(self) -> dict:

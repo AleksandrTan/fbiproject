@@ -35,6 +35,7 @@ class InitParams:
         self.advertising_id = self.generate_uuid()
         self.device_id = self.generate_device_id()
         self.build_device = self.generate_build_device()
+        self.ds_user_id = ''
 
     def __setattr__(self, key, value):
         super().__setattr__(key, value)

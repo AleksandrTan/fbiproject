@@ -23,7 +23,7 @@ class LoginTask:
 
     def run(self, task_id: int, initialization_parameters: dict) -> dict:
         """
-        Run task
+        Run task login
         :param initialization_parameters:
         :param task_id: int
         :return: dict
@@ -40,13 +40,22 @@ class LoginTask:
         pre_requests = self.social_api.run_pre_requests(initialization_parameters, initialization_headers,
                                                         initialization_headers.get_headers())
 
-        # run login
-        # data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
-        # sys_report = SystemApiRequests(self.individual_id)
-        # send report to api
-        # sys_report.task_report(task_id, data)
+        if not pre_requests:
+            return {"status": False}
 
-        return data
+        # check if params csrftoken, mid, ig_did are passed
+        if initialization_parameters.mid and initialization_parameters.csrftoken and initialization_parameters.ig_did:
+            # run login
+            # data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
+            # sys_report = SystemApiRequests(self.individual_id)
+            # send report to api
+            # sys_report.task_report(task_id, data)
+            pass
+
+        return {
+            "status": True, "initialization_parameters": initialization_parameters,
+            "initialization_headers": initialization_headers
+        }
 
     def initialization_parameters(self, initialization_parameters: dict) -> object:
         """

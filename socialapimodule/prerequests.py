@@ -1,0 +1,230 @@
+"""
+Class for pre requests
+"""
+from json.decoder import JSONDecodeError
+from requests.exceptions import HTTPError, ConnectionError
+
+from settings import instadata
+from logsource.logconfig import logger
+
+
+class PreRequestWorker:
+
+    def __init__(self, params: object, headers: object, headers_dict: dict, request: object, requests_map):
+
+        self.params = params
+        self.headers = headers
+        self.headers_dict = headers_dict
+        self.request = request
+        self.requests_map = requests_map
+
+    def run_pre_requests(self) -> bool:
+        """
+        Emulation mobile app behaivor before login
+        Run pre requests
+        :return: bool
+        """
+        status = self.read_msisdn_header(self.params, self.headers, self.headers_dict)
+        self.msisdn_header_bootstrap(self.params, self.headers_dict)
+        self.token_result(self.params, self.headers_dict)
+        self.contact_point_prefill(self.params, self.headers_dict)
+        self.pre_login_sync(self.params, self.headers_dict)
+        self.sync_login_experiments(self.params, self.headers_dict)
+        self.log_attribution(self.params, self.headers_dict)
+        self.get_prefill_candidates(self.params, self.headers_dict)
+
+        return status
+
+    def make_request_post(self, main_url: str, uri: str, params: dict, headers: dict) -> dict:
+        """
+        :param headers:
+        :param main_url: str
+        :param uri: str
+        :param params: dict
+        :return: dict
+        """
+        data = {"status": False}
+        response = ''
+
+        try:
+            print(main_url + uri, params, headers)
+            response = self.request.post(main_url + uri, data=params, headers=headers)
+        except ConnectionError as error:
+            logger.warning(f"{error}")
+
+            return {"status": False, "error": True, "error_type": error}
+
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                if data["status"] == 'ok':
+                    return {"status": True, "data": data}
+            except JSONDecodeError as error:
+                logger.warning(f"Error decode json - {error}, {response}")
+
+        return {"status": False, "error": True, "error_type": response.status_code}
+
+    def read_msisdn_header(self, params: object, headers_data: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["read_msisdn_header"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {"mobile_subno_usage": "default",
+                "device_id": params.uuid}
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if params.csrftoken == '':
+            params.csrftoken = self.get_cookie_param("csrftoken")
+            params.mid = self.get_cookie_param("mid")
+            params.ig_did = self.get_cookie_param("ig_did")
+            params.ds_user_id = self.get_cookie_param("ds_user_id")
+            headers_data.set_attribute_headers("X-MID", params.mid)
+
+        if result["status"] and params.csrftoken:
+            return True
+
+        return False
+
+    def msisdn_header_bootstrap(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["msisdn_header_bootstrap"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {"mobile_subno_usage": "default",
+                "device_id": params.uuid}
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"]:
+            return True
+
+        return False
+
+    def token_result(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["token"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {
+            "token_hash": "",
+            "device_id": params.device_id,
+            "custom_device_id": params.uuid,
+            "fetch_reason": 'token_expired'
+        }
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"]:
+            return True
+
+        return False
+
+    def contact_point_prefill(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["contact_point_prefill"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {"mobile_subno_usage": "default",
+                "device_id": params.uuid}
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"]:
+            return True
+
+        return False
+
+    def pre_login_sync(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["launcher_sync"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {
+            "id": params.uuid,
+            "configs": instadata.PRE_LOGIN_STRING}
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"]:
+            return True
+
+        return False
+
+    def sync_login_experiments(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["qe_sync"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        try:
+            data = {
+                "_csrftoken": params.csrftoken,
+                "id": self.request.cookies["ds_user_id"],
+                "_uid": self.request.cookies["ds_user_id"],
+                "_uuid": params.uuid
+            }
+        except KeyError as error:
+            logger.warning(f"Error  - {error}")
+            data = {
+                "id": params.uuid,
+            }
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"]:
+            return True
+
+        return False
+
+    def log_attribution(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["log_attribution"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {
+            "adid": params.adid
+        }
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"]:
+            return True
+
+        return False
+
+    def get_prefill_candidates(self, params: object, headers_dict: dict):
+        url = self.requests_map["main_url"]
+        uri = self.requests_map["get_prefill_candidates"]["uri"]
+
+        headers = {'X-DEVICE-ID': headers_dict["X-IG-Device-ID"],
+                   "User-Agent": headers_dict["User-Agent"]}
+
+        data = {
+            "android_device_id": params.device_id,
+            "usages": '["account_recovery_omnibox"]',
+            "device_id": params.uuid
+        }
+
+        result = self.make_request_post(url, uri, data, headers)
+
+        if result["status"]:
+            return True
+
+        return False
+
+    def get_cookie_param(self, key):
+        return self.request.cookies.get_dict().get(key, '')
