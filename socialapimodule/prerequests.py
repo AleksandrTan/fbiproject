@@ -49,18 +49,24 @@ class PreRequestWorker:
         try:
             print(main_url + uri, params, headers)
             response = self.request.post(main_url + uri, data=params, headers=headers)
+            try:
+                data = response.json()
+            except JSONDecodeError as error:
+                logger.warning(f"Error decode json - {error}, {response}")
+                return {"status": False, "error": True, "error_type": error}
         except ConnectionError as error:
             logger.warning(f"{error}")
-
             return {"status": False, "error": True, "error_type": error}
 
         if response.status_code == 200:
-            try:
-                data = response.json()
-                if data["status"] == 'ok':
-                    return {"status": True, "data": data}
-            except JSONDecodeError as error:
-                logger.warning(f"Error decode json - {error}, {response}")
+            if data["status"] == 'ok':
+                return {"status": True, "data": data}
+
+        if response.status_code in [400, 403, 404, 429, 408]:
+            if data["message"] == 'bad request':
+                logger.warning(f"Error server status - code {response.status_code}, {data}")
+                print(f"Error server status - code {response.status_code}, {data}")
+                return {"status": False, "data": data}
 
         return {"status": False, "error": True, "error_type": response.status_code}
 

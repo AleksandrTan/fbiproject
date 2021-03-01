@@ -10,14 +10,17 @@ from settings.devices import DEVICES
 class InitParams:
 
     def __init__(self, account_data: dict, initialization_parameters: dict):
+        # if initialization_parameters are passed to the bot constructor
         if initialization_parameters:
             self.csrftoken = initialization_parameters["csrftoken"]
             self.mid = initialization_parameters["mid"]
             self.ig_did = initialization_parameters["id_did"]
+            self.ds_user_id = initialization_parameters["ds_user_id"]
         else:
             self.csrftoken = ''
             self.mid = ''
             self.ig_did = ''
+            self.ds_user_id = ''
         self.account_data = account_data
         self.initialization_parameters = dict()
         self.device_settings = instadata.DEVICE_SETTINGS

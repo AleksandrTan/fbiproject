@@ -110,6 +110,9 @@ class InstagramRequestsMobile:
         """
         Emulation mobile app behaivor before login
         Run pre requests
+        :param headers_dict: dict - attributes from headers object
+        :param params: object
+        :param headers: object
         :return: bool
         """
         pre_request_obj = PreRequestWorker(params, headers, headers_dict, self.request, self.requests_map)
