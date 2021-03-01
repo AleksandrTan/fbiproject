@@ -49,7 +49,7 @@ class PreRequestWorker:
             response = self.request.post(main_url + uri, data=params, headers=headers)
             try:
                 data = response.json()
-                print(uri, response.status_code, data, response.headers)
+                print(main_url + uri, response.status_code, response.headers)
             except JSONDecodeError as error:
                 logger.warning(f"Error decode json - {error}, {response}")
                 return {"status": False, "error": True, "error_type": error, "error_message": data}

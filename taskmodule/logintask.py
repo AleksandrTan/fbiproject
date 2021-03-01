@@ -4,6 +4,7 @@ Parameters and headers are pre-initialized. Prerequisites for initializing the d
 and the login request itself are performed.
 """
 import sys
+from supportingmodule.keygenerate import EncGenerate
 from pprint import pprint
 from logsource.logconfig import logger
 from core.initheaders import InitHeaders
@@ -50,7 +51,12 @@ class LoginTask:
             return {"status": False}
 
         # check if params csrftoken, mid, ig_did are passed
-        if initialization_parameters.mid and initialization_parameters.csrftoken and initialization_parameters.ig_did:
+        if initialization_parameters.mid and initialization_parameters.csrftoken:
+
+            generator = EncGenerate(initialization_parameters.passwordEncryptionPubKey,
+                                    initialization_parameters.passwordEncryptionKeyId, self.account_data["password"])
+            enc_password = generator.enc_password()
+            print(enc_password)
             # run login
             # data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
             # sys_report = SystemApiRequests(self.individual_id)
