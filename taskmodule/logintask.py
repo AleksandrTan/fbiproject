@@ -56,6 +56,7 @@ class LoginTask:
             generator = EncGenerate(initialization_parameters.passwordEncryptionPubKey,
                                     initialization_parameters.passwordEncryptionKeyId, self.account_data["password"])
             enc_password = generator.enc_password()
+            initialization_parameters.enc_password = enc_password
             print(enc_password)
             # run login
             # data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)

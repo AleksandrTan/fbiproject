@@ -10,12 +10,12 @@ from Cryptodome.PublicKey import RSA
 
 
 class EncGenerate:
-    def __init__(self, public_key: str, public_key_id, password: str):
+    def __init__(self, public_key: str, public_key_id: int, password: str):
         self.public_key = public_key
         self.public_key_id = public_key_id
         self.password = password
 
-    def enc_password(self):
+    def enc_password(self) -> str:
         session_key = get_random_bytes(32)
         iv = bytearray(12)
         time = str(int(datetime.datetime.now().timestamp()))

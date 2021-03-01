@@ -49,7 +49,7 @@ class PreRequestWorker:
             response = self.request.post(main_url + uri, data=params, headers=headers)
             try:
                 data = response.json()
-                print(main_url + uri, response.status_code, response.headers)
+                print(main_url + uri, response.status_code, data, response.headers)
             except JSONDecodeError as error:
                 logger.warning(f"Error decode json - {error}, {response}")
                 return {"status": False, "error": True, "error_type": error, "error_message": data}
@@ -60,12 +60,12 @@ class PreRequestWorker:
         if response.status_code in [403, 404, 429, 408]:
             if data["message"] == 'bad request':
                 logger.warning(f"Error server status - code {response.status_code}, {data}")
-                print(f"Error server status - code {response.status_code}, {data}")
+
                 return {"status": False, "error_type": response.status_code, "error_message": data}
 
         if response.status_code == 400:
             logger.warning(f"Error server status - code {response.status_code}, {data}")
-            print(f"Error server status - code {response.status_code}, {data}")
+
             return {"status": False, "error_type": response.status_code, "error_message": data}
 
         if response.status_code == 200:
@@ -204,7 +204,7 @@ class PreRequestWorker:
             #     params.authorization = result["headers"]["ig-set-authorization"]
 
             if type(result["headers"]["ig-set-password-encryption-key-id"]) == str:
-                params.passwordEncryptionKeyId = result["headers"]["ig-set-password-encryption-key-id"]
+                params.passwordEncryptionKeyId = int(result["headers"]["ig-set-password-encryption-key-id"])
 
             if type(result["headers"]["ig-set-password-encryption-pub-key"]) == str:
                 params.passwordEncryptionPubKey = result["headers"]["ig-set-password-encryption-pub-key"]

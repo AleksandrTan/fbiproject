@@ -26,17 +26,18 @@ class InstagramRequestsMobile:
         :return: dict
         """
         try:
-            print(main_url + uri, params, headers)
             response = self.request.post(main_url + uri, data=params, headers=headers)
         except requests.exceptions.ConnectionError as error:
             logger.warning(f"{error}")
+
             return {"status": False, "error": True, "error_type": error}
-        print(response.status_code)
+
         if response.status_code == 200:
             data = json.loads(response.text)
             if data["status"] == 'ok':
                 return {"status": data["status"], "data": data}
         logger.warning(f"Error response code - {response.status_code}")
+
         return {"status": False, "error": True, "error_type": response.status_code}
 
     def login(self, account_data: dict, initialization_parameters: object, initialization_headers: dict) -> dict:
