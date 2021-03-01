@@ -6,6 +6,7 @@ a file on the standard output stream.
 """
 import sys
 import time
+from pprint import pprint
 
 from logsource.logconfig import logger
 from taskmodule.inittask import InitTasks
@@ -58,7 +59,8 @@ class InstaBot:
             else:
                 self.initialization_parameters = data_authorization["initialization_parameters"]
                 self.initialization_headers = data_authorization["initialization_headers"]
-
+                pprint(self.initialization_parameters.get_dict())
+                pprint(self.initialization_headers.get_headers())
                 return
 
         while self.execution_status:

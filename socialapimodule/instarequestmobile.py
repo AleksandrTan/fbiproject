@@ -6,6 +6,7 @@ import json
 from logsource.logconfig import logger
 from settings import requestsmap
 from socialapimodule.prerequests import PreRequestWorker
+from socialapimodule.postrequests import PostRequestWorker
 
 
 class InstagramRequestsMobile:

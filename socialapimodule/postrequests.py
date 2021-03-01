@@ -1,5 +1,5 @@
 """
-Class for make pre requests
+Class for make post requests
 """
 from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectionError
@@ -8,7 +8,7 @@ from settings import instadata
 from logsource.logconfig import logger
 
 
-class PreRequestWorker:
+class PostRequestWorker:
 
     def __init__(self, params: object, headers: object, headers_dict: dict, request: object, requests_map):
 
@@ -49,7 +49,7 @@ class PreRequestWorker:
             response = self.request.post(main_url + uri, data=params, headers=headers)
             try:
                 data = response.json()
-                print(uri, response.status_code, data, response.headers)
+                print(response.status_code, data)
             except JSONDecodeError as error:
                 logger.warning(f"Error decode json - {error}, {response}")
                 return {"status": False, "error": True, "error_type": error, "error_message": data}
@@ -70,7 +70,7 @@ class PreRequestWorker:
 
         if response.status_code == 200:
             if data["status"] == 'ok':
-                return {"status": True, "data": data, "headers": response.headers}
+                return {"status": True, "data": data}
 
         return {"status": False, "error": True, "error_type": response.status_code, "error_message": data}
 
@@ -196,19 +196,6 @@ class PreRequestWorker:
         result = self._make_request_post(url, uri, data, headers)
 
         if result["status"]:
-            # set initialization_parameters for login action(generate enc_password)
-            # if type(result["headers"]["x-ig-set-www-claim"]) == str:
-            #     params.igWWWClaim = result["headers"]["x-ig-set-www-claim"]
-            #
-            # if type(result["headers"]["ig-set-authorization"]) == str:
-            #     params.authorization = result["headers"]["ig-set-authorization"]
-
-            if type(result["headers"]["ig-set-password-encryption-key-id"]) == str:
-                params.passwordEncryptionKeyId = result["headers"]["ig-set-password-encryption-key-id"]
-
-            if type(result["headers"]["ig-set-password-encryption-pub-key"]) == str:
-                params.passwordEncryptionPubKey = result["headers"]["ig-set-password-encryption-pub-key"]
-
             return True
 
         return False

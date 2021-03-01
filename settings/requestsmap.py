@@ -9,8 +9,6 @@ INSTAGRAM_MOBILE_DATA = {
 
     "login": {
         "uri": "accounts/login/",
-        "data": "",
-        "params": ""
     },
 
     "read_msisdn_header": {

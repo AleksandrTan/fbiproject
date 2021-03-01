@@ -39,6 +39,10 @@ class InitParams:
         self.device_id = self.generate_device_id()
         self.build_device = self.generate_build_device()
         self.ds_user_id = ''
+        self.igWWWClaim = ''
+        self.authorization = ''
+        self.passwordEncryptionKeyId = ''
+        self.passwordEncryptionPubKey = ''
 
     def __setattr__(self, key, value):
         super().__setattr__(key, value)
@@ -64,3 +68,6 @@ class InitParams:
             data += elem
 
         return '2' + str(data)
+
+    def get_dict(self):
+        return self.__dict__
