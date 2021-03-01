@@ -49,7 +49,6 @@ class InstaBot:
         # log in to the social network
         if self.login_task:
             data_authorization = self._perform_task(self.task_objects['login'], 0, self.initialization_parameters)
-
             if not data_authorization['status']:
                 sys.stdout.write(f"The authorization process for the bot"
                                  f" number {self.individual_id} was not correct.!!!")
