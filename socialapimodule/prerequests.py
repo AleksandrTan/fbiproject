@@ -24,18 +24,18 @@ class PreRequestWorker:
         Run pre requests
         :return: bool
         """
-        status = self.read_msisdn_header(self.params, self.headers, self.headers_dict)
-        self.msisdn_header_bootstrap(self.params, self.headers_dict)
-        self.token_result(self.params, self.headers_dict)
-        self.contact_point_prefill(self.params, self.headers_dict)
-        self.pre_login_sync(self.params, self.headers_dict)
-        self.sync_login_experiments(self.params, self.headers_dict)
-        self.log_attribution(self.params, self.headers_dict)
-        self.get_prefill_candidates(self.params, self.headers_dict)
+        status = self._read_msisdn_header(self.params, self.headers, self.headers_dict)
+        self._msisdn_header_bootstrap(self.params, self.headers_dict)
+        self._token_result(self.params, self.headers_dict)
+        self._contact_point_prefill(self.params, self.headers_dict)
+        self._pre_login_sync(self.params, self.headers_dict)
+        self._sync_login_experiments(self.params, self.headers_dict)
+        self._log_attribution(self.params, self.headers_dict)
+        self._get_prefill_candidates(self.params, self.headers_dict)
 
         return status
 
-    def make_request_post(self, main_url: str, uri: str, params: dict, headers: dict) -> dict:
+    def _make_request_post(self, main_url: str, uri: str, params: dict, headers: dict) -> dict:
         """
         :param headers:
         :param main_url: str
@@ -64,7 +64,7 @@ class PreRequestWorker:
 
         return {"status": False, "error": True, "error_type": response.status_code}
 
-    def read_msisdn_header(self, params: object, headers_data: object, headers_dict: dict):
+    def _read_msisdn_header(self, params: object, headers_data: object, headers_dict: dict):
         url = self.requests_map["main_url"]
         uri = self.requests_map["read_msisdn_header"]["uri"]
 
@@ -74,7 +74,7 @@ class PreRequestWorker:
         data = {"mobile_subno_usage": "default",
                 "device_id": params.uuid}
 
-        result = self.make_request_post(url, uri, data, headers)
+        result = self._make_request_post(url, uri, data, headers)
 
         if params.csrftoken == '':
             params.csrftoken = self.get_cookie_param("csrftoken")
@@ -88,7 +88,7 @@ class PreRequestWorker:
 
         return False
 
-    def msisdn_header_bootstrap(self, params: object, headers_dict: dict):
+    def _msisdn_header_bootstrap(self, params: object, headers_dict: dict):
         url = self.requests_map["main_url"]
         uri = self.requests_map["msisdn_header_bootstrap"]["uri"]
 
@@ -98,14 +98,14 @@ class PreRequestWorker:
         data = {"mobile_subno_usage": "default",
                 "device_id": params.uuid}
 
-        result = self.make_request_post(url, uri, data, headers)
+        result = self._make_request_post(url, uri, data, headers)
 
         if result["status"]:
             return True
 
         return False
 
-    def token_result(self, params: object, headers_dict: dict):
+    def _token_result(self, params: object, headers_dict: dict):
         url = self.requests_map["main_url"]
         uri = self.requests_map["token"]["uri"]
 
@@ -119,14 +119,14 @@ class PreRequestWorker:
             "fetch_reason": 'token_expired'
         }
 
-        result = self.make_request_post(url, uri, data, headers)
+        result = self._make_request_post(url, uri, data, headers)
 
         if result["status"]:
             return True
 
         return False
 
-    def contact_point_prefill(self, params: object, headers_dict: dict):
+    def _contact_point_prefill(self, params: object, headers_dict: dict):
         url = self.requests_map["main_url"]
         uri = self.requests_map["contact_point_prefill"]["uri"]
 
@@ -136,14 +136,14 @@ class PreRequestWorker:
         data = {"mobile_subno_usage": "default",
                 "device_id": params.uuid}
 
-        result = self.make_request_post(url, uri, data, headers)
+        result = self._make_request_post(url, uri, data, headers)
 
         if result["status"]:
             return True
 
         return False
 
-    def pre_login_sync(self, params: object, headers_dict: dict):
+    def _pre_login_sync(self, params: object, headers_dict: dict):
         url = self.requests_map["main_url"]
         uri = self.requests_map["launcher_sync"]["uri"]
 
@@ -154,14 +154,14 @@ class PreRequestWorker:
             "id": params.uuid,
             "configs": instadata.PRE_LOGIN_STRING}
 
-        result = self.make_request_post(url, uri, data, headers)
+        result = self._make_request_post(url, uri, data, headers)
 
         if result["status"]:
             return True
 
         return False
 
-    def sync_login_experiments(self, params: object, headers_dict: dict):
+    def _sync_login_experiments(self, params: object, headers_dict: dict):
         url = self.requests_map["main_url"]
         uri = self.requests_map["qe_sync"]["uri"]
 
@@ -181,14 +181,14 @@ class PreRequestWorker:
                 "id": params.uuid,
             }
 
-        result = self.make_request_post(url, uri, data, headers)
+        result = self._make_request_post(url, uri, data, headers)
 
         if result["status"]:
             return True
 
         return False
 
-    def log_attribution(self, params: object, headers_dict: dict):
+    def _log_attribution(self, params: object, headers_dict: dict):
         url = self.requests_map["main_url"]
         uri = self.requests_map["log_attribution"]["uri"]
 
@@ -199,14 +199,14 @@ class PreRequestWorker:
             "adid": params.adid
         }
 
-        result = self.make_request_post(url, uri, data, headers)
+        result = self._make_request_post(url, uri, data, headers)
 
         if result["status"]:
             return True
 
         return False
 
-    def get_prefill_candidates(self, params: object, headers_dict: dict):
+    def _get_prefill_candidates(self, params: object, headers_dict: dict):
         url = self.requests_map["main_url"]
         uri = self.requests_map["get_prefill_candidates"]["uri"]
 
@@ -219,7 +219,7 @@ class PreRequestWorker:
             "device_id": params.uuid
         }
 
-        result = self.make_request_post(url, uri, data, headers)
+        result = self._make_request_post(url, uri, data, headers)
 
         if result["status"]:
             return True

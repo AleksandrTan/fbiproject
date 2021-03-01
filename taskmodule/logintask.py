@@ -37,7 +37,7 @@ class LoginTask:
 
         # run pre-requests
         # these requests are desirable and in addition,
-        # the request will allow you to get the parameter cookie - csrftoken from the api
+        # the request will allow you to get the parameter cookie - csrftoken, mid, ig_did from the api
         pre_requests = self.social_api.run_pre_requests(initialization_parameters, initialization_headers,
                                                         initialization_headers.get_headers())
 
