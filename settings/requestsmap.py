@@ -1,5 +1,5 @@
 """
-Settings file for queries map to social networks API
+Settings file for queries to social networks API
 """
 
 INSTAGRAM_MOBILE_DATA = {

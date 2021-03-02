@@ -48,9 +48,9 @@ class PreRequestWorker:
         data = {"status": False}
 
         try:
-            hmac = HMACGenerate(json.dumps(params))
-            # TODO добавить генерацию  HMAC данных
-            response = self.request.post(main_url + uri, data=hmac.generate_signature(), headers=headers)
+            # hmac = HMACGenerate(json.dumps(params))
+            # hmac_data = hmac.generate_signature()
+            response = self.request.post(main_url + uri, data=params, headers=headers)
             try:
                 data = response.json()
                 print(main_url + uri, response.status_code, data, response.headers)
