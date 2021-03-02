@@ -199,12 +199,6 @@ class PreRequestWorker:
 
         if result["status"]:
             # set initialization_parameters for login action(generate enc_password)
-            # if type(result["headers"]["x-ig-set-www-claim"]) == str:
-            #     params.igWWWClaim = result["headers"]["x-ig-set-www-claim"]
-            #
-            # if type(result["headers"]["ig-set-authorization"]) == str:
-            #     params.authorization = result["headers"]["ig-set-authorization"]
-
             if type(result["headers"]["ig-set-password-encryption-key-id"]) == str:
                 params.passwordEncryptionKeyId = int(result["headers"]["ig-set-password-encryption-key-id"])
 

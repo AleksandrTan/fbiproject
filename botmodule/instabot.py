@@ -60,6 +60,7 @@ class InstaBot:
                 self.initialization_headers = data_authorization["initialization_headers"]
                 pprint(self.initialization_parameters.get_dict())
                 pprint(self.initialization_headers.get_headers())
+                self.execution_status = True
                 return
 
         while self.execution_status:

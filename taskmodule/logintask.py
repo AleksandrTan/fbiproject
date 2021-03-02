@@ -4,6 +4,8 @@ Parameters and headers are pre-initialized. Prerequisites for initializing the d
 and the login request itself are performed.
 """
 import sys
+
+from apimodule.systemapiwork import SystemApiRequests
 from supportingmodule.keygenerate import EncGenerate
 from pprint import pprint
 from logsource.logconfig import logger
@@ -32,8 +34,6 @@ class LoginTask:
         """
         data = dict()
         initialization_parameters = self.initialization_parameters(initialization_parameters)
-
-        # initialize request headers
         initialization_headers = self.initialization_headers(initialization_parameters)
 
         # run pre-requests
@@ -59,16 +59,17 @@ class LoginTask:
             initialization_parameters.enc_password = enc_password
             print(enc_password)
             # run login
-            # data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
-            # sys_report = SystemApiRequests(self.individual_id)
-            # send report to api
-            # sys_report.task_report(task_id, data)
-            pass
+            data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
+            if data["status"]:
+                sys_report = SystemApiRequests(self.individual_id)
+                # send report to api
+                sys_report.task_report(task_id, data)
+                return {
+                    "status": True, "initialization_parameters": initialization_parameters,
+                    "initialization_headers": initialization_headers
+                }
 
-        return {
-            "status": True, "initialization_parameters": initialization_parameters,
-            "initialization_headers": initialization_headers
-        }
+        return {"status": False}
 
     def initialization_parameters(self, initialization_parameters: dict) -> object:
         """
