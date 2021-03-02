@@ -2,6 +2,7 @@
 A class for making requests to the social network Instagram used mobile API
 """
 from json.decoder import JSONDecodeError
+from pprint import pprint
 
 import requests
 import json
@@ -31,10 +32,14 @@ class InstagramRequestsMobile:
         try:
             hmac = HMACGenerate(json.dumps(params))
             hmac_data = hmac.generate_signature()
-            response = self.request.post(main_url + uri, data=params, headers=headers)
+            pprint(params)
+            response = self.request.post(main_url + uri, data=hmac_data, headers=headers)
             try:
                 data = response.json()
                 print(main_url + uri, response.status_code, data, response.headers)
+                print(params)
+                print(headers)
+                print(self.request.cookies.get_dict())
             except JSONDecodeError as error:
                 logger.warning(f"Error decode json - {error}, {response}")
                 return {"status": False, "error": True, "error_type": error, "error_message": data}
@@ -70,7 +75,7 @@ class InstagramRequestsMobile:
 
         request_data = dict()
         request_data['username'] = account_data['username']
-        request_data['password'] = account_data['password']
+        # request_data['password'] = account_data['password']
         request_data['enc_password'] = initialization_parameters.enc_password
         request_data['guid'] = initialization_parameters.uuid
         request_data["phone_id"] = initialization_parameters.phone_id
@@ -86,7 +91,7 @@ class InstagramRequestsMobile:
                                            request_data, initialization_headers)
 
         if response["status"]:
-            if response["response_data"]["status"] == 'ok':
+            if response["data"]["status"] == 'ok':
                 return {"status": True, "response_data": response}
 
         return {"status": False}
@@ -99,7 +104,7 @@ class InstagramRequestsMobile:
         """
         response = self._make_request_post(self.requests_map["main_url"], self.requests_map["like"]["uri"], params,
                                            authorization_data)
-        print(4000, authorization_data)
+
         return response
 
     def flipping_tape(self, params: dict, authorization_data: dict) -> dict:
@@ -111,7 +116,7 @@ class InstagramRequestsMobile:
         response = self._make_request_post(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"],
                                            params,
                                            authorization_data)
-        print(4000, authorization_data)
+
         return response
 
     def subscribe(self, params: dict, authorization_data: dict) -> dict:
@@ -122,7 +127,7 @@ class InstagramRequestsMobile:
         """
         response = self._make_request_post(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params,
                                            authorization_data)
-        print(4000, authorization_data)
+
         return response
 
     def run_pre_requests(self, params: object, headers: object, headers_dict: dict) -> bool:

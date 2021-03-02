@@ -41,7 +41,7 @@ class LoginTask:
         # the request will allow you to get the parameter cookie - csrftoken, mid, ig_did from the api
         pre_requests = self.social_api.run_pre_requests(initialization_parameters, initialization_headers,
                                                         initialization_headers.get_headers())
-        print(pre_requests, 3500, self.social_api.request.cookies.get_dict(), 4000)
+        print(self.social_api.request.cookies.get_dict(), 4000)
         if not pre_requests:
             sys.stdout.write(f"The parameters necessary for the further operation of the bot {self.individual_id} "
                              f"were not received.!!!")
@@ -55,11 +55,13 @@ class LoginTask:
 
             generator = EncGenerate(initialization_parameters.passwordEncryptionPubKey,
                                     initialization_parameters.passwordEncryptionKeyId, self.account_data["password"])
-            enc_password = generator.enc_password()
-            initialization_parameters.enc_password = enc_password
-            print(enc_password)
+
+            initialization_parameters.enc_password = generator.enc_password()
+
             # run login
-            data = self.social_api.login(self.account_data, initialization_parameters, initialization_headers)
+            data = self.social_api.login(self.account_data, initialization_parameters,
+                                         initialization_headers.get_headers())
+
             if data["status"]:
                 sys_report = SystemApiRequests(self.individual_id)
                 # send report to api
