@@ -1,11 +1,13 @@
 """
 Class for make pre requests
 """
+import json
 from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectionError
 
 from settings import instadata
 from logsource.logconfig import logger
+from supportingmodule.signgenerate import HMACGenerate
 
 
 class PreRequestWorker:
@@ -46,7 +48,9 @@ class PreRequestWorker:
         data = {"status": False}
 
         try:
-            response = self.request.post(main_url + uri, data=params, headers=headers)
+            hmac = HMACGenerate(json.dumps(params))
+            # TODO добавить генерацию  HMAC данных
+            response = self.request.post(main_url + uri, data=hmac.generate_signature(), headers=headers)
             try:
                 data = response.json()
                 print(main_url + uri, response.status_code, data, response.headers)

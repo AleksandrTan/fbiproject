@@ -6,7 +6,6 @@ import json
 from logsource.logconfig import logger
 from settings import requestsmap
 from socialapimodule.prerequests import PreRequestWorker
-from socialapimodule.postrequests import PostRequestWorker
 
 
 class InstagramRequestsMobile:
@@ -26,6 +25,7 @@ class InstagramRequestsMobile:
         :return: dict
         """
         try:
+            # TODO добавить генерацию  HMAC данных
             response = self.request.post(main_url + uri, data=params, headers=headers)
         except requests.exceptions.ConnectionError as error:
             logger.warning(f"{error}")

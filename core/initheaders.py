@@ -42,6 +42,7 @@ class InitHeaders:
         self.initialization_headers["X-IG-Connection-Type"] = self.default_headers["X-IG-Connection-Type"]
         self.initialization_headers["X-IG-Capabilities"] = self.default_headers["X-IG-Capabilities"]
         self.initialization_headers['X-IG-App-ID'] = instadata.FACEBOOK_ANALYTICS_APPLICATION_ID
+        self.initialization_headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
 
     def init_user_agent(self):
         return f"Instagram {instadata.APP_VERSION} Android {self.generate_build_device()}; {instadata.LANGUAGE};" \

@@ -16,9 +16,6 @@ class HMACGenerate:
         """
         Generate signature of POST data for Private API
         """
-        body = hmac.new(
-            SIG_KEY_VERSION.encode("utf-8"), self.data.encode("utf-8"), hashlib.sha256
-        ).hexdigest()
-        return "signed_body={body}.{data}&ig_sig_key_version={sig_key}".format(
-            body=body, data=urllib.parse.quote(self.data), sig_key=SIG_KEY_VERSION,
-        )
+        body = hmac.new(SIG_KEY_VERSION.encode("utf-8"), self.data.encode("utf-8"), hashlib.sha256).hexdigest()
+
+        return f"signed_body={body}.{urllib.parse.quote(self.data)}&ig_sig_key_version={SIG_KEY_VERSION}"

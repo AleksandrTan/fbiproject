@@ -82,7 +82,7 @@ class InstaBot:
                 time.sleep(2)
                 continue
 
-    def _perform_task(self, task_object, task_id, initialization_parameters: dict = None):
+    def _perform_task(self, task_object: object, task_id: int, initialization_parameters: dict = None) -> dict:
         data_task = task_object.run(task_id, initialization_parameters)
         time.sleep(2)
         return data_task
