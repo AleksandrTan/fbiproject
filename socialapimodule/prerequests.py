@@ -48,8 +48,6 @@ class PreRequestWorker:
         data = {"status": False}
 
         try:
-            # hmac = HMACGenerate(json.dumps(params))
-            # hmac_data = hmac.generate_signature()
             response = self.request.post(main_url + uri, data=params, headers=headers)
             try:
                 data = response.json()
@@ -166,7 +164,8 @@ class PreRequestWorker:
 
         data = {
             "id": params.uuid,
-            "configs": instadata.PRE_LOGIN_STRING}
+            "configs": instadata.PRE_LOGIN_STRING
+        }
 
         result = self._make_request_post(url, uri, data, headers)
 

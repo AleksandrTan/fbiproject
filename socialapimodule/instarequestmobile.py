@@ -6,6 +6,7 @@ import json
 from logsource.logconfig import logger
 from settings import requestsmap
 from socialapimodule.prerequests import PreRequestWorker
+from supportingmodule.signgenerate import HMACGenerate
 
 
 class InstagramRequestsMobile:
@@ -25,7 +26,9 @@ class InstagramRequestsMobile:
         :return: dict
         """
         try:
-            # TODO добавить генерацию  HMAC данных
+            hmac = HMACGenerate(json.dumps(params))
+            hmac_data = hmac.generate_signature()
+
             response = self.request.post(main_url + uri, data=params, headers=headers)
         except requests.exceptions.ConnectionError as error:
             logger.warning(f"{error}")

@@ -19,3 +19,4 @@ class HMACGenerate:
         body = hmac.new(SIG_KEY_VERSION.encode("utf-8"), self.data.encode("utf-8"), hashlib.sha256).hexdigest()
 
         return f"signed_body={body}.{urllib.parse.quote(self.data)}&ig_sig_key_version={SIG_KEY_VERSION}"
+        # return {"signed_body": body + '.' + urllib.parse.quote(self.data), "ig_sig_key_version": SIG_KEY_VERSION}
