@@ -1,13 +1,11 @@
 """
 Class for make pre requests
 """
-import json
 from json.decoder import JSONDecodeError
 from requests.exceptions import ConnectionError
 
 from settings import instadata
 from logsource.logconfig import logger
-from supportingmodule.signgenerate import HMACGenerate
 
 
 class PreRequestWorker:
@@ -22,20 +20,21 @@ class PreRequestWorker:
 
     def run_pre_requests(self) -> bool:
         """
-        Emulation mobile app behaivor before login
+        Emulation mobile app behaivor before login and initialization is needed for parameter requests
         Run pre requests
         :return: bool
         """
-        status = self._read_msisdn_header(self.params, self.headers, self.headers_dict)
-        self._msisdn_header_bootstrap(self.params, self.headers_dict)
-        self._token_result(self.params, self.headers_dict)
-        self._contact_point_prefill(self.params, self.headers_dict)
-        self._pre_login_sync(self.params, self.headers_dict)
-        self._sync_login_experiments(self.params, self.headers_dict)
-        self._log_attribution(self.params, self.headers_dict)
-        self._get_prefill_candidates(self.params, self.headers_dict)
+        result_pre = list()
+        result_pre.append(self._read_msisdn_header(self.params, self.headers, self.headers_dict))
+        result_pre.append(self._msisdn_header_bootstrap(self.params, self.headers_dict))
+        result_pre.append(self._token_result(self.params, self.headers_dict))
+        result_pre.append(self._contact_point_prefill(self.params, self.headers_dict))
+        result_pre.append(self._pre_login_sync(self.params, self.headers_dict))
+        result_pre.append(self._sync_login_experiments(self.params, self.headers_dict))
+        result_pre.append(self._log_attribution(self.params, self.headers_dict))
+        result_pre.append(self._get_prefill_candidates(self.params, self.headers_dict))
 
-        return status
+        return all(result_pre)
 
     def _make_request_post(self, main_url: str, uri: str, params: dict, headers: dict) -> dict:
         """
@@ -76,7 +75,7 @@ class PreRequestWorker:
 
         return {"status": False, "error": True, "error_type": response.status_code, "error_message": data}
 
-    def _read_msisdn_header(self, params: object, headers_data: object, headers_dict: dict):
+    def _read_msisdn_header(self, params: object, headers_data: object, headers_dict: dict) -> bool:
         url = self.requests_map["main_url"]
         uri = self.requests_map["read_msisdn_header"]["uri"]
 

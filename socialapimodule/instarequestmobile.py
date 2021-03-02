@@ -17,7 +17,7 @@ class InstagramRequestsMobile:
         self.port_proxy = port_proxy
         self.requests_map = requestsmap.INSTAGRAM_MOBILE_DATA
 
-    def make_request_post(self, main_url: str, uri: str, params: dict, headers: dict) -> dict:
+    def _make_request_post(self, main_url: str, uri: str, params: dict, headers: dict) -> dict:
         """
         :param headers:
         :param main_url: str
@@ -50,30 +50,31 @@ class InstagramRequestsMobile:
         :param initialization_parameters: dict
         :return: dict
         """
-        authorization_data = {"status": "ok", "ok": 3500, "authorization_data": dict()}
+        authorization_data = {}
+        if not initialization_parameters.passwordEncryptionPubKey:
+            logger.warning(f"The parameters required for the request are not set!")
+            return {"status": False, "error": True}
 
-        if authorization_data['status']:
-            request_data = dict()
-            request_data['username'] = account_data['username']
-            request_data['password'] = account_data['password']
-            request_data['enc_password'] = '#PWD_INSTAGRAM:4:${time}:${encrypted}'
-            request_data['guid'] = initialization_parameters.uuid
-            request_data["phone_id"] = initialization_parameters.phone_id
-            request_data["_csrftoken"] = initialization_parameters.csrftoken
-            request_data["device_id"] = initialization_parameters.device_id
-            request_data["adid"] = ''
-            request_data["google_tokens"] = '[]'
-            request_data["login_attempt_count"] = 0
-            request_data["country_codes"] = initialization_parameters.country_codes
-            request_data["jazoest"] = initialization_parameters.jazoest
+        request_data = dict()
+        request_data['username'] = account_data['username']
+        request_data['password'] = account_data['password']
+        request_data['enc_password'] = '#PWD_INSTAGRAM:4:${time}:${encrypted}'
+        request_data['guid'] = initialization_parameters.uuid
+        request_data["phone_id"] = initialization_parameters.phone_id
+        request_data["_csrftoken"] = initialization_parameters.csrftoken
+        request_data["device_id"] = initialization_parameters.device_id
+        request_data["adid"] = ''
+        request_data["google_tokens"] = '[]'
+        request_data["login_attempt_count"] = 0
+        request_data["country_codes"] = initialization_parameters.country_codes
+        request_data["jazoest"] = initialization_parameters.jazoest
 
-            response = self.make_request_post(self.requests_map["main_url"], self.requests_map["login"]["uri"],
-                                              request_data, initialization_headers)
+        response = self._make_request_post(self.requests_map["main_url"], self.requests_map["login"]["uri"],
+                                           request_data, initialization_headers)
 
-            if response["status"]:
-                if response["response_data"]["status"] == 'ok' and response["response_data"]['authenticated'] == 'true':
-                    return {"status": True, "response_data": response,
-                            'authorization_data': authorization_data['authorization_data']}
+        if response["status"]:
+            if response["response_data"]["status"] == 'ok':
+                return {"status": True, "response_data": response}
 
         return {"status": False}
 
@@ -83,8 +84,8 @@ class InstagramRequestsMobile:
         :param params: dict
         :return: dict
         """
-        response = self.make_request_post(self.requests_map["main_url"], self.requests_map["like"]["uri"], params,
-                                          authorization_data)
+        response = self._make_request_post(self.requests_map["main_url"], self.requests_map["like"]["uri"], params,
+                                           authorization_data)
         print(4000, authorization_data)
         return response
 
@@ -94,9 +95,9 @@ class InstagramRequestsMobile:
         :param params: dict
         :return: dict
         """
-        response = self.make_request_post(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"],
-                                          params,
-                                          authorization_data)
+        response = self._make_request_post(self.requests_map["main_url"], self.requests_map["flipping_type"]["uri"],
+                                           params,
+                                           authorization_data)
         print(4000, authorization_data)
         return response
 
@@ -106,8 +107,8 @@ class InstagramRequestsMobile:
         :param params: dict
         :return: dict
         """
-        response = self.make_request_post(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params,
-                                          authorization_data)
+        response = self._make_request_post(self.requests_map["main_url"], self.requests_map["subscribe"]["uri"], params,
+                                           authorization_data)
         print(4000, authorization_data)
         return response
 
