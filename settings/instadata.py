@@ -20,7 +20,7 @@ DEVICE_SETTINGS = {
         "model": "h1",
         "device": "RS988",
         "resolution": "1440x2392",
-        "app_version": '136.0.0.34.124',
+        "app_version": '142.0.0.34.110',
         "manufacturer": "LGE/lge",
         "version_code": "185203708",
         "android_release": "6.0.1",

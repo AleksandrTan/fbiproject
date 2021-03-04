@@ -2,13 +2,16 @@
 Parameter generation (enc_password) class for login action
 """
 import base64
+import binascii
 import datetime
-import secrets
+import struct
+from urllib.parse import quote_plus
 
+from Cryptodome import Random
 from Cryptodome.Random import get_random_bytes
 from Cryptodome.Cipher import AES, PKCS1_v1_5
 from Cryptodome.PublicKey import RSA
-import rsa
+from nacl.public import PublicKey, SealedBox
 
 
 class EncGenerate:
@@ -18,7 +21,7 @@ class EncGenerate:
         self.password = password
 
     def enc_password(self) -> str:
-        randKey = get_random_bytes(32)
+        key = get_random_bytes(32)
         iv = get_random_bytes(12)
         # iv = bytearray(12)
         time = str(int(datetime.datetime.now().timestamp()))
@@ -26,50 +29,66 @@ class EncGenerate:
         decoded_public = base64.b64decode(self.public_key.encode())
         recipient_key = RSA.import_key(decoded_public)
         cipher_rsa = PKCS1_v1_5.new(recipient_key)
-        enc_session_key = cipher_rsa.encrypt(randKey)
+        enc_session_key = cipher_rsa.encrypt(key)
 
-        cipher_aes = AES.new(randKey, AES.MODE_GCM, iv)
+        cipher_aes = AES.new(key, AES.MODE_GCM, iv)
         cipher_aes.update(time.encode())
 
         ciphertext, tag = cipher_aes.encrypt_and_digest(self.password.encode("utf8"))
         payload = base64.b64encode((b"\x01\x00" + self.public_key_id.to_bytes(2, byteorder='big') + iv + len(
-            enc_session_key).to_bytes(2, byteorder='big') + enc_session_key + tag + ciphertext))
+            enc_session_key).to_bytes(2, byteorder='big') + enc_session_key + tag + ciphertext)).decode()
 
-        return f"#PWD_INSTAGRAM:4:{time}:{payload.decode()}"
+        return f"#PWD_INSTAGRAM:4:{time}:{payload}"
 
         # return f"#PWD_INSTAGRAM:0:{time}:{self.password}"
 
     def encrypt_password(self):
-        IG_LOGIN_ANDROID_PUBLIC_KEY = self.public_key
-        IG_LOGIN_ANDROID_PUBLIC_KEY_ID = self.public_key_id
+        key = Random.get_random_bytes(32)
+        iv = Random.get_random_bytes(12)
+        time = int(datetime.datetime.now().timestamp())
 
-        key = secrets.token_bytes(32)
-        iv = secrets.token_bytes(12)
-        time = str(int(datetime.datetime.now().timestamp()))
+        pubkey = base64.b64decode(self.public_key)
+        rsa_key = RSA.importKey(pubkey)
+        rsa_cipher = PKCS1_v1_5.new(rsa_key)
+        encrypted_key = rsa_cipher.encrypt(key)
 
-        base64_decoded_device_public_key = base64.b64decode(
-            IG_LOGIN_ANDROID_PUBLIC_KEY.encode()
-        )
+        aes = AES.new(key, AES.MODE_GCM, nonce=iv)
+        aes.update(str(time).encode())
 
-        public_key = RSA.importKey(base64_decoded_device_public_key)
+        encrypted_password, tag = aes.encrypt_and_digest(bytes(self.password, 'utf-8'))
 
-        encrypted_aes_key = rsa.encrypt(key, public_key)
+        encrypted = bytes([1,
+                           self.public_key_id,
+                           *list(iv),
+                           *list(struct.pack('<h', len(encrypted_key))),
+                           *list(encrypted_key),
+                           *list(tag),
+                           *list(encrypted_password)])
+        encrypted = base64.b64encode(encrypted).decode()
 
-        cipher = AES.new(key, AES.MODE_GCM, iv)
-        cipher.update(time.encode())
-        encrypted_password, tag = cipher.encrypt_and_digest(self.password.encode())
+        return f'#PWD_INSTAGRAM:4:{time}:{encrypted}'
 
-        payload = (
-                b"\x01"
-                + str(IG_LOGIN_ANDROID_PUBLIC_KEY_ID).encode()
-                + iv
-                + b"0001"
-                + encrypted_aes_key
-                + tag
-                + encrypted_password
-        )
+    def encrypt_password_v2(self, key_id, pub_key, password, version=10):
+        key = Random.get_random_bytes(32)
+        iv = bytes([0] * 12)
 
-        base64_encoded_payload = base64.b64encode(payload)
+        time = int(datetime.datetime.now().timestamp())
 
-        return f"#PWD_INSTAGRAM:4:{time}:{base64_encoded_payload.decode()}"
+        aes = AES.new(key, AES.MODE_GCM, nonce=iv, mac_len=16)
+        aes.update(str(time).encode('utf-8'))
+        encrypted_password, cipher_tag = aes.encrypt_and_digest(password.encode('utf-8'))
+
+        pub_key_bytes = binascii.unhexlify(pub_key)
+        seal_box = SealedBox(PublicKey(pub_key_bytes))
+        encrypted_key = seal_box.encrypt(key)
+
+        encrypted = bytes([1,
+                           key_id,
+                           *list(struct.pack('<h', len(encrypted_key))),
+                           *list(encrypted_key),
+                           *list(cipher_tag),
+                           *list(encrypted_password)])
+        encrypted = base64.b64encode(encrypted).decode('utf-8')
+
+        return quote_plus(f'#PWD_INSTAGRAM_BROWSER:{version}:{time}:{encrypted}')
 

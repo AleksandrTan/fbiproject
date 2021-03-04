@@ -32,6 +32,7 @@ class InstagramRequestsMobile:
         try:
             hmac = HMACGenerate(json.dumps(params))
             hmac_data = hmac.generate_signature()
+            pprint(hmac_data)
             pprint(params)
             response = self.request.post(main_url + uri, data=hmac_data, headers=headers)
             try:
