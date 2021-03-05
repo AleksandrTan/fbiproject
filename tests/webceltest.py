@@ -39,12 +39,13 @@ def cel_test():
     submit_elem.click()
     driver.request_interceptor = interceptor
     request = driver.wait_for_request('https://www.instagram.com/accounts/login/ajax/')
-    # print('-' * 50)
-    # print(request.body, request.headers, request.querystring, 80001)
-    # print('-' * 50)
-    # print('* response' * 50)
-    # print(request.response, request.response.headers, 9000)
-    # print('* response' * 50)
+    print('- request ajax https://www.instagram.com/accounts/login/ajax/' * 2)
+    print(request.body, request.headers, request.querystring, 80001)
+    print('-request ajax close' * 50)
+
+    print('* response https://www.instagram.com/accounts/login/ajax/' * 2)
+    print(request.response, request.response.headers, 9000)
+    print('* response ajax close' * 50)
     driver.close()
 
 

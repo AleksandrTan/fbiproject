@@ -76,7 +76,7 @@ class InstagramRequestsMobile:
 
         request_data = dict()
         request_data['username'] = account_data['username']
-        # request_data['password'] = account_data['password']
+        request_data['password'] = account_data['password']
         request_data['enc_password'] = initialization_parameters.enc_password
         request_data['guid'] = initialization_parameters.uuid
         request_data["phone_id"] = initialization_parameters.phone_id
